@@ -4,7 +4,10 @@
   "description": "Simple notes manager on react, bootstrap, express & mongoose",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev-server": "nodemon app.js",
+    "dev-client": "npm run start --prefix client",
+    "dev": "concurrently -c \"green.bold,red.bold\" \"npm run dev-server\" \"npm run dev-client\""
   },
   "author": "modesnero <modesnero@gmail.com>",
   "license": "ISC",

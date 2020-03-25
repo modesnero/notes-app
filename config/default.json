@@ -1,0 +1,10 @@
+{
+  "port": 5000,
+  "jwtSecret": "",
+  "mongoUrl": "",
+  "mongoOptions": {
+    "useNewUrlParser": true,
+    "useUnifiedTopology": true,
+    "useCreateIndex": true
+  }
+}
