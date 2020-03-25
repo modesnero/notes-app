@@ -13,6 +13,7 @@ const MONGO_OPTIONS = {
 const app = express()
 
 app.use('/api/auth', require('./routes/auth.routes'))
+app.use('/api/note', require('./routes/notes.routes'))
 
 async function start () {
   try {
