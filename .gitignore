@@ -1,3 +1,9 @@
+# Dependencies
 node_modules
 client/node_modules
+
+# Server Config
 config
+
+# Client build
+client/build
