@@ -12,16 +12,15 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production node app.js",
+    "dev": "concurrently -c \"green.bold,red.bold\" \"npm run dev-server\" \"npm run dev-client\"",
     "server:dev": "nodemon app.js",
-    "client:dev": "npm run start --prefix client",
     "client:install": "npm install --prefix client",
-    "client-build": "npm run build --prefix client",
-    "dev": "concurrently -c \"green.bold,red.bold\" \"npm run dev-server\" \"npm run dev-client\""
+    "client:dev": "npm run start --prefix client",
+    "client:build": "npm run build --prefix client"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "config": "^3.3.0",
-    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-validator": "^6.4.0",
     "jsonwebtoken": "^8.5.1",
