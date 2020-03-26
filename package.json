@@ -1,17 +1,23 @@
 {
   "name": "notes-app",
   "version": "0.1.0",
+  "private": true,
   "description": "Simple notes manager on react, bootstrap, express & mongoose",
+  "author": "modesnero <modesnero@gmail.com>",
   "main": "app.js",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/modesnero/notes-app"
+  },
   "scripts": {
-    "start": "node app.js",
-    "dev-server": "nodemon app.js",
-    "dev-client": "npm run start --prefix client",
+    "start": "cross-env NODE_ENV=production node app.js",
+    "server:dev": "nodemon app.js",
+    "client:dev": "npm run start --prefix client",
+    "client:install": "npm install --prefix client",
     "client-build": "npm run build --prefix client",
     "dev": "concurrently -c \"green.bold,red.bold\" \"npm run dev-server\" \"npm run dev-client\""
   },
-  "author": "modesnero <modesnero@gmail.com>",
-  "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "config": "^3.3.0",
