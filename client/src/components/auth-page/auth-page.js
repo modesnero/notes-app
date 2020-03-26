@@ -76,6 +76,7 @@ export default class AuthPage extends Component {
       } = await apiService.auth('login', { email, password })
 
       if (token) {
+        localStorage.token = token
         this.props.setToken(token)
       }
 
