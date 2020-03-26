@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { Component } from 'react'
+import Auth from '../auth'
 
-function App () {
-  return (
-    <>
-      <h1>Hello</h1>
-    </>
-  )
+export default class App extends Component {
+
+  state = {
+    isAuth: false
+  }
+
+  render () {
+    const {isAuth} = this.state
+    if (!isAuth) return <Auth />
+  }
 }
-
-export default App

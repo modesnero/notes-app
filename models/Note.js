@@ -7,4 +7,4 @@ const noteSchema = new Schema({
   date: { type: Date, required: true }
 })
 
-module.exports = model('User', noteSchema)
+module.exports = model('Note', noteSchema)

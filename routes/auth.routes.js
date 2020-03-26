@@ -4,9 +4,9 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const config = require('config')
 const User = require('../models/User')
-const authRouter = Router()
+const router = Router()
 
-authRouter.post(
+router.post(
   '/register',
   [
     check('email', 'Incorrect email').isEmail(),
@@ -14,32 +14,38 @@ authRouter.post(
   ],
   async (req, res) => {
     try {
+      const { email, password } = req.body
+
+      // Check validator on errors
       const errors = validationResult(req)
-      if (errors.isEmpty) {
+      if (!errors.isEmpty) {
         return res.status(400).json({
           errors: errors.array(),
-          message: 'Incorrect registration data'
+          message: 'Вы ввели некорректные данные'
         })
       }
 
-      const { email, password } = req.body
+      // Check on already exist account
       const candidate = await User.findOne({ email })
       if (candidate) {
-        res.status(400).json({ message: 'Такой пользователь уже существует' })
+        return res.status(400).json({ message: 'Пользователь уже существует' })
       }
 
-      const hashedPassword = bcrypt.hash(password, 12)
+      // Hash password & chreate user
+      const hashedPassword = await bcrypt.hash(password, 12)
       const user = new User({ email, password: hashedPassword })
 
+      // Save user in DB & response
       await user.save()
-      res.status(201).json({ message: 'User has been created' })
+      res.status(201).json({ message: 'Пользователь успешно зарегестрирован' })
     } catch (e) {
-      res.status(500).json({ message: 'Server Error' })
+      console.log(e)
+      res.status(500).json({ message: 'Ошибка сервера' })
     }
   }
 )
 
-authRouter.post(
+router.post(
   '/login',
   [
     check('email', 'Incorrect email')
@@ -49,36 +55,38 @@ authRouter.post(
   ],
   async (req, res) => {
     try {
-      const errors = validationResult(req)
+      const { email, password } = req.body
 
-      if (errors.isEmpty) {
+      // Check validator on errors
+      const errors = validationResult(req)
+      if (!errors.isEmpty) {
         return res.status(400).json({
           errors: errors.array(),
-          message: 'Incorrect login data'
+          message: 'Вы ввели некорректные данные'
         })
       }
 
-      const { email, password } = req.body
-
+      // Check user on DB
       const user = await User.findOne({ email })
       if (!user) {
-        return res.status(400).json({ message: 'User not found' })
+        return res.status(400).json({ message: 'Пользователь не найден' })
       }
 
+      // Check user password
       const isMatch = await bcrypt.compare(password, user.password)
       if (!isMatch) {
-        return res.status(400).json({ message: 'Invalid password' })
+        return res.status(400).json({ message: 'Некорректный пароль' })
       }
 
+      // Create auth token
       const token = jwt.sign({ userId: user.id }, config.get('jwtSecret'), {
         expiresIn: '1h'
       })
-
-      res.json({ token, userId: user.id })
+      res.json({ token })
     } catch (e) {
-      res.status(500).json({ message: 'Server Error' })
+      res.status(500).json({ message: 'Ошибка сервера' })
     }
   }
 )
 
-module.exports = authRouter
+module.exports = router

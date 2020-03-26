@@ -45,12 +45,11 @@ notesRouter.get('/', async (req, res) => {
   }
 })
 
-notesRouter.delete('/', async (req, res) => {
+notesRouter.delete('/:id', async (req, res) => {
   try {
-    const { token, noteId } = req.params
-    const userId = await jwt.verify(token, config.get('jwtSecret'))
+    const { id: noteId } = req.params
 
-    await Note.findOneAndDelete({ userId, _id: noteId })
+    await Note.findOneAndDelete({ _id: noteId })
     res.json({ message: 'Note has been deleted' })
   } catch (error) {
     res.status(500).json({ message: 'Server Error' })
