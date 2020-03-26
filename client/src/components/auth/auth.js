@@ -9,63 +9,48 @@ export default class Auth extends Component {
     isLogin: true,
     formData: { email: '', pass: '', confirm: '' },
     btnTitle: { submitBtn: 'Авторизация', toggleBtn: 'Регистрация' },
-    validationFail: { email: false, pass: false, confirm: false },
-    errorMsg: { email: '', pass: '', confirm: '' },
     alert: { variant: '', message: '', isShow: false }
   }
 
-  onEmailChange = event => {
+  onFieldChange = (event, fieldName) => {
     const {
-      formData: { pass, confirm }
+      formData: { email, pass, confirm }
     } = this.state
 
-    this.setState({
-      formData: { email: event.target.value, pass, confirm }
-    })
-  }
+    let formData
+    switch (fieldName) {
+      case 'email':
+        formData = { email: event.target.value, pass, confirm }
+        break
+      case 'pass':
+        formData = { pass: event.target.value, email, confirm }
+        break
+      case 'confirm':
+        formData = { confirm: event.target.value, email, pass }
+        break
+    }
 
-  onPassChange = event => {
-    const {
-      formData: { email, confirm }
-    } = this.state
-
-    this.setState({
-      formData: { pass: event.target.value, email, confirm }
-    })
-  }
-
-  onConfirmChange = event => {
-    const {
-      formData: { email, pass }
-    } = this.state
-
-    this.setState({
-      formData: { confirm: event.target.value, email, pass }
-    })
+    this.setState({ formData })
   }
 
   toggleStatus = () => {
     this.setState(({ isLogin }) => ({ isLogin: !isLogin }))
-
     this.setState(({ btnTitle }) => {
-      const submitBtn = btnTitle.toggleBtn
-      const toggleBtn = btnTitle.submitBtn
-
-      return { btnTitle: { submitBtn, toggleBtn } }
+      return {
+        btnTitle: {
+          submitBtn: btnTitle.toggleBtn,
+          toggleBtn: btnTitle.submitBtn
+        }
+      }
     })
   }
 
   register = async (email, password, confirm) => {
     if (password !== confirm) {
-      this.setState({
-        validationFail: { email: false, pass: true, confirm: true },
-        errorMsg: {
-          email: '',
-          pass: 'Пароли не совпадают, повторите попытку',
-          confirm: 'Пароли не совпадают, повторите попытку'
-        }
+      const message = 'Пароли не совпадают, повторите попытку'
+      return this.setState({
+        alert: { isShow: true, variant: 'danger', message }
       })
-      return 'Passwords is not equals'
     }
 
     try {
@@ -120,20 +105,11 @@ export default class Auth extends Component {
       alert: { variant: '', message: '', isShow: false }
     })
 
-    const result = (await isLogin)
-      ? this.login(email, pass)
-      : this.register(email, pass, confirm)
+    isLogin ? this.login(email, pass) : this.register(email, pass, confirm)
   }
 
   render () {
-    const {
-      errorMsg,
-      validationFail,
-      isLogin,
-      btnTitle,
-      formData,
-      alert
-    } = this.state
+    const { isLogin, btnTitle, formData, alert } = this.state
 
     const confirmView = (
       <Form.Group>
@@ -142,12 +118,8 @@ export default class Auth extends Component {
           type='password'
           placeholder='Подтвердите пароль'
           value={formData.confirm}
-          isInvalid={validationFail.confirm}
-          onChange={this.onConfirmChange}
+          onChange={(event) => this.onFieldChange(event, 'confirm')}
         />
-        <Form.Control.Feedback type='invalid'>
-          {errorMsg.confirm}
-        </Form.Control.Feedback>
       </Form.Group>
     )
 
@@ -162,7 +134,7 @@ export default class Auth extends Component {
         <Row className='justify-content-md-center mt-5'>
           <Col lg='6'>
             <Form onSubmit={this.onSubmit}>
-              <h1 className='text-center'>Авторизация</h1>
+              <h1 className='text-center'>{btnTitle.submitBtn}</h1>
 
               <Form.Group>
                 <Form.Label>Email адрес</Form.Label>
@@ -170,12 +142,8 @@ export default class Auth extends Component {
                   type='email'
                   placeholder='Введите email'
                   value={formData.email}
-                  isInvalid={validationFail.email}
-                  onChange={this.onEmailChange}
+                  onChange={(event) => this.onFieldChange(event, 'email')}
                 />
-                <Form.Control.Feedback type='invalid'>
-                  {errorMsg.email}
-                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group>
@@ -184,25 +152,17 @@ export default class Auth extends Component {
                   type='password'
                   placeholder='Введите пароль'
                   value={formData.pass}
-                  isInvalid={validationFail.pass}
-                  onChange={this.onPassChange}
+                  onChange={(event) => this.onFieldChange(event, 'pass')}
                 />
-                <Form.Control.Feedback type='invalid'>
-                  {errorMsg.pass}
-                </Form.Control.Feedback>
               </Form.Group>
 
               {!isLogin ? confirmView : null}
 
-              <Button type='submit' variant='primary' className='mr-3'>
+              <Button type='submit' variant='primary' className='mb-3' block>
                 {btnTitle.submitBtn}
               </Button>
 
-              <Button
-                variant='secondary'
-                className='mx-auto'
-                onClick={this.toggleStatus}
-              >
+              <Button variant='secondary' onClick={this.toggleStatus} block>
                 {btnTitle.toggleBtn}
               </Button>
             </Form>
