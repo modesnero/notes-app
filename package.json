@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production node app.js",
-    "dev": "concurrently -c \"green.bold,red.bold\" \"npm run dev-server\" \"npm run dev-client\"",
+    "dev": "concurrently -c \"green.bold,red.bold\" \"npm run server:dev\" \"npm run client:dev\"",
     "server:dev": "nodemon app.js",
     "client:install": "cd client & npm install",
     "client:dev": "npm run start --prefix client",

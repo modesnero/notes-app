@@ -3,6 +3,21 @@ import { Form, Container, Row, Col, Button, Alert } from 'react-bootstrap'
 import ApiService from '../../api-service'
 const apiService = new ApiService()
 
+function AuthField (props) {
+  const { onFieldChange, type, field, title, value, placeholder } = this.props
+  return (
+    <Form.Group>
+      <Form.Label>{title}</Form.Label>
+      <Form.Control
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={event => onFieldChange(event, field)}
+      />
+    </Form.Group>
+  )
+}
+
 export default class Auth extends Component {
   state = {
     token: '',
@@ -112,15 +127,14 @@ export default class Auth extends Component {
     const { isLogin, btnTitle, formData, alert } = this.state
 
     const confirmView = (
-      <Form.Group>
-        <Form.Label>Подтверждение пароля</Form.Label>
-        <Form.Control
-          type='password'
-          placeholder='Подтвердите пароль'
-          value={formData.confirm}
-          onChange={(event) => this.onFieldChange(event, 'confirm')}
-        />
-      </Form.Group>
+      <AuthField
+        type='password'
+        field='confirm'
+        title='Проверка пароля'
+        placeholder='Повторите пароль'
+        value={formData.confirm}
+        onFieldChange={this.onFieldChange}
+      />
     )
 
     const alertView = (
@@ -142,7 +156,7 @@ export default class Auth extends Component {
                   type='email'
                   placeholder='Введите email'
                   value={formData.email}
-                  onChange={(event) => this.onFieldChange(event, 'email')}
+                  onChange={event => this.onFieldChange(event, 'email')}
                 />
               </Form.Group>
 
@@ -152,7 +166,7 @@ export default class Auth extends Component {
                   type='password'
                   placeholder='Введите пароль'
                   value={formData.pass}
-                  onChange={(event) => this.onFieldChange(event, 'pass')}
+                  onChange={event => this.onFieldChange(event, 'pass')}
                 />
               </Form.Group>
 
