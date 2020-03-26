@@ -1,61 +1,46 @@
 import React, { Component } from 'react'
 import { Form, Container, Row, Col, Button, Alert } from 'react-bootstrap'
 import ApiService from '../../api-service'
+import AuthField from '../auth-field'
 const apiService = new ApiService()
 
-function AuthField (props) {
-  const { onFieldChange, type, field, title, value, placeholder } = this.props
-  return (
-    <Form.Group>
-      <Form.Label>{title}</Form.Label>
-      <Form.Control
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={event => onFieldChange(event, field)}
-      />
-    </Form.Group>
-  )
-}
-
-export default class Auth extends Component {
+export default class AuthPage extends Component {
   state = {
-    token: '',
     isLogin: true,
-    formData: { email: '', pass: '', confirm: '' },
+    formValue: { email: '', pass: '', confirm: '' },
     btnTitle: { submitBtn: 'Авторизация', toggleBtn: 'Регистрация' },
     alert: { variant: '', message: '', isShow: false }
   }
 
   onFieldChange = (event, fieldName) => {
     const {
-      formData: { email, pass, confirm }
+      formValue: { email, pass, confirm }
     } = this.state
 
-    let formData
+    let formValue
     switch (fieldName) {
       case 'email':
-        formData = { email: event.target.value, pass, confirm }
+        formValue = { email: event.target.value, pass, confirm }
         break
       case 'pass':
-        formData = { pass: event.target.value, email, confirm }
+        formValue = { pass: event.target.value, email, confirm }
         break
       case 'confirm':
-        formData = { confirm: event.target.value, email, pass }
+        formValue = { confirm: event.target.value, email, pass }
         break
+      default:
+        console.error('Unexpected field name')
     }
 
-    this.setState({ formData })
+    this.setState({ formValue })
   }
 
   toggleStatus = () => {
-    this.setState(({ isLogin }) => ({ isLogin: !isLogin }))
-    this.setState(({ btnTitle }) => {
+    this.setState(({ btnTitle, isLogin }) => {
+      const { toggleBtn, submitBtn } = btnTitle
       return {
-        btnTitle: {
-          submitBtn: btnTitle.toggleBtn,
-          toggleBtn: btnTitle.submitBtn
-        }
+        btnTitle: { submitBtn: toggleBtn, toggleBtn: submitBtn },
+        isLogin: !isLogin
       }
     })
   }
@@ -91,8 +76,7 @@ export default class Auth extends Component {
       } = await apiService.auth('login', { email, password })
 
       if (token) {
-        this.setState({ token })
-        alert('успешная авторизация')
+        this.props.setToken(token)
       }
 
       if (message) {
@@ -110,13 +94,11 @@ export default class Auth extends Component {
     event.preventDefault()
     const {
       isLogin,
-      formData: { email, pass, confirm }
+      formValue: { email, pass, confirm }
     } = this.state
 
     this.setState({
-      formData: { email: '', pass: '', confirm: '' },
-      validationFail: { email: false, pass: false, confirm: false },
-      errorMsg: { email: '', pass: '', confirm: '' },
+      formValue: { email: '', pass: '', confirm: '' },
       alert: { variant: '', message: '', isShow: false }
     })
 
@@ -124,7 +106,7 @@ export default class Auth extends Component {
   }
 
   render () {
-    const { isLogin, btnTitle, formData, alert } = this.state
+    const { isLogin, btnTitle, formValue, alert } = this.state
 
     const confirmView = (
       <AuthField
@@ -132,7 +114,7 @@ export default class Auth extends Component {
         field='confirm'
         title='Проверка пароля'
         placeholder='Повторите пароль'
-        value={formData.confirm}
+        value={formValue.confirm}
         onFieldChange={this.onFieldChange}
       />
     )
@@ -150,25 +132,23 @@ export default class Auth extends Component {
             <Form onSubmit={this.onSubmit}>
               <h1 className='text-center'>{btnTitle.submitBtn}</h1>
 
-              <Form.Group>
-                <Form.Label>Email адрес</Form.Label>
-                <Form.Control
-                  type='email'
-                  placeholder='Введите email'
-                  value={formData.email}
-                  onChange={event => this.onFieldChange(event, 'email')}
-                />
-              </Form.Group>
+              <AuthField
+                type='email'
+                field='email'
+                title='Email'
+                placeholder='Введите email'
+                value={formValue.email}
+                onFieldChange={this.onFieldChange}
+              />
 
-              <Form.Group>
-                <Form.Label>Пароль</Form.Label>
-                <Form.Control
-                  type='password'
-                  placeholder='Введите пароль'
-                  value={formData.pass}
-                  onChange={event => this.onFieldChange(event, 'pass')}
-                />
-              </Form.Group>
+              <AuthField
+                type='password'
+                field='pass'
+                title='Пароль'
+                placeholder='Введите пароль'
+                value={formValue.pass}
+                onFieldChange={this.onFieldChange}
+              />
 
               {!isLogin ? confirmView : null}
 

@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
-import Auth from '../auth'
+import AuthPage from '../auth-page'
 
 export default class App extends Component {
-
   state = {
-    isAuth: false
+    token: ''
   }
 
+  setToken = token => this.setState({ token })
+
   render () {
-    const {isAuth} = this.state
-    if (!isAuth) return <Auth />
+    const { token } = this.state
+    if (!token) return <AuthPage setToken={this.setToken} />
+    else return <h1>{token}</h1>
   }
 }
