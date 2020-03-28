@@ -9,7 +9,6 @@ export default function NotesList (props) {
   searchValue = searchValue.toLowerCase()
 
   const filter = (title, subTitle, text) => {
-    console.log(title, searchValue)
     const filterResult =
       searchValue === '' ||
       title.toLowerCase().includes(searchValue) ||
@@ -21,7 +20,6 @@ export default function NotesList (props) {
   const items = notes.map(note => {
     const { title, subTitle, text, id } = note
     const filterResult = filter(title, subTitle, text)
-    console.log(filterResult)
 
     const item = (
       <NoteCard

@@ -10,6 +10,12 @@ export default class Header extends Component {
     this.setState({ searchValue: event.target.value })
   }
 
+  ckickPage = page => {
+    const { setSearchValue, setPage } = this.props
+    setPage(page)
+    setSearchValue('')
+  }
+
   render () {
     const { setToken, setSearchValue } = this.props
     const { searchValue } = this.state
@@ -28,8 +34,12 @@ export default class Header extends Component {
 
           <Navbar.Collapse id='responsive-navbar-nav'>
             <Nav className='mr-auto'>
-              <Nav.Link onClick={() => setSearchValue('')}>Мои заметки</Nav.Link>
-              <Nav.Link>Добавить заметку</Nav.Link>
+              <Nav.Link onClick={() => this.ckickPage('home')}>
+                Мои заметки
+              </Nav.Link>
+              <Nav.Link onClick={() => this.ckickPage('add')}>
+                Добавить заметку
+              </Nav.Link>
 
               <Nav.Link onClick={() => setToken('')}>
                 Выйти из аккаунта

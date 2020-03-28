@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Header from '../header'
 import NotesList from '../notes-list'
 import SearchView from '../search-view'
+import AddPage from '../add-page'
 import { Container } from 'react-bootstrap'
 
 // Mock notes data
@@ -20,6 +21,7 @@ const getItem = id => {
   Id, laboriosam soluta nemo, necessitatibus et atque aliquam fugiat`
   }
 }
+
 const getData = num => {
   let data = []
   for (let i = 0; i < num; i++) {
@@ -34,7 +36,8 @@ export default class NotesPage extends Component {
     const notes = getData(3)
     this.state = {
       notes,
-      searchValue: ''
+      searchValue: '',
+      page: 'home'
     }
   }
 
@@ -50,12 +53,18 @@ export default class NotesPage extends Component {
 
   setSearchValue = newValue => this.setState({ searchValue: newValue })
 
+  setPage = page => this.setState({ page })
+
   render () {
     const { setToken } = this.props
-    const { notes, searchValue } = this.state
+    const { notes, page, searchValue } = this.state
     return (
       <>
-        <Header setToken={setToken} setSearchValue={this.setSearchValue} />
+        <Header
+          setToken={setToken}
+          setSearchValue={this.setSearchValue}
+          setPage={this.setPage}
+        />
 
         <Container>
           {searchValue ? (
@@ -65,11 +74,15 @@ export default class NotesPage extends Component {
             />
           ) : null}
 
-          <NotesList
-            notes={notes}
-            deleteNote={this.deleteNote}
-            searchValue={searchValue}
-          />
+          {page === 'home' ? (
+            <NotesList
+              notes={notes}
+              deleteNote={this.deleteNote}
+              searchValue={searchValue}
+            />
+          ) : null}
+
+          {page === 'add' ? <AddPage /> : null}
         </Container>
       </>
     )
