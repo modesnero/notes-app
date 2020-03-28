@@ -16,12 +16,8 @@ export default class App extends Component {
   render () {
     const { token } = this.state
     const authPage = <AuthPage setToken={this.setToken} />
-    const notesPage = null
+    const notesPage = <h1> {token} </h1>
 
-    return (
-      <>
-        {!token ? authPage : notesPage}
-      </>
-    )
+    return <>{!token ? authPage : notesPage}</>
   }
 }

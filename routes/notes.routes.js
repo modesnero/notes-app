@@ -21,11 +21,11 @@ notesRouter.post(
         })
       }
 
-      const { token, title, text, date } = req.body
-      const userId = await jwt.verify(token, config.get('jwtSecret'))
-      const note = new Note({ userId, title, text, date })
+      const { token, noteId, note } = req.body
+      const email = await jwt.verify(token, config.get('jwtSecret'))
+      const newNote = new Note({ email, noteId, note })
 
-      await note.save()
+      await newNote.save()
       res.status(201).json({ message: 'Note has been created' })
     } catch (error) {
       res.status(500).json({ message: 'Server Error' })
@@ -35,40 +35,45 @@ notesRouter.post(
 
 notesRouter.get('/', async (req, res) => {
   try {
-    const { token } = req.params
-    const userId = await jwt.verify(token, config.get('jwtSecret'))
+    const { token, noteId } = req.query
+    const email = await jwt.verify(token, config.get('jwtSecret'))
 
-    const notes = await Note.find({ userId })
-    res.json(notes)
+    const result = await Note.find({ email, noteId })
+    res.json(result)
   } catch (error) {
     res.status(500).json({ message: 'Server Error' })
   }
 })
 
-notesRouter.delete('/:id', async (req, res) => {
+notesRouter.delete('/', async (req, res) => {
   try {
-    const { id: noteId } = req.params
+    const { token, noteId } = req.query
+    const email = await jwt.verify(token, config.get('jwtSecret'))
 
-    await Note.findOneAndDelete({ _id: noteId })
+    await Note.findOneAndDelete({ email, noteId })
     res.json({ message: 'Note has been deleted' })
   } catch (error) {
     res.status(500).json({ message: 'Server Error' })
   }
 })
 
-notesRouter.put('/', async (req, res) => {
-  try {
-    const { token, noteId, title, text } = req.body
-    const userId = await jwt.verify(token, config.get('jwtSecret'))
+notesRouter.put(
+  '/',
+  [
+    check('title', 'Incorrect title').isLength({ min: 4, max: 120 }),
+    check('text', 'Incorrect text').isLength({ min: 4, max: 600 })
+  ],
+  async (req, res) => {
+    try {
+      const { token, noteId, note } = req.body
+      const email = await jwt.verify(token, config.get('jwtSecret'))
 
-    await Note.findOneAndUpdate(
-      { _id: noteId, userId },
-      { $set: { title, text } }
-    )
-    res.json({ message: 'Note has been updated' })
-  } catch (error) {
-    res.status(500).json({ message: 'Server Error' })
+      await Note.findOneAndUpdate({ email, noteId }, { $set: { note } })
+      res.json({ message: 'Note has been updated' })
+    } catch (error) {
+      res.status(500).json({ message: 'Server Error' })
+    }
   }
-})
+)
 
 module.exports = notesRouter

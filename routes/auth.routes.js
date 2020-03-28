@@ -79,7 +79,7 @@ router.post(
       }
 
       // Create auth token
-      const token = jwt.sign({ userId: user.id }, config.get('jwtSecret'), {
+      const token = jwt.sign({ email }, config.get('jwtSecret'), {
         expiresIn: '1800 days'
       })
       res.json({ token })
