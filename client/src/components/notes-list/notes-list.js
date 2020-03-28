@@ -5,9 +5,20 @@ import NoteCard from '../note-card'
 export default function NotesList (props) {
   const { notes, deleteNote } = props
 
-  const items = notes.map(note => {
-    const { title, subTitle, text, id } = note
+  const filter = (searchValue, title, subTitle, text) => {
     return (
+      searchValue === '' ||
+      title.indexOf(searchValue) ||
+      subTitle.indexOf(searchValue) ||
+      text.indexOf(searchValue)
+    )
+  }
+
+  const items = notes.map(note => {
+    const { searchValue, title, subTitle, text, id } = note
+    const filterResult = filter(searchValue, title, subTitle, text)
+
+    const item = (
       <NoteCard
         deleteNote={deleteNote}
         title={title}
@@ -17,6 +28,8 @@ export default function NotesList (props) {
         id={id}
       />
     )
+
+    return filterResult ? item : null
   })
 
   return (

@@ -11,7 +11,7 @@ export default class Header extends Component {
   }
 
   render () {
-    const { setToken } = this.props
+    const { setToken, setSearchValue } = this.props
     const { searchValue } = this.state
 
     return (
@@ -41,7 +41,11 @@ export default class Header extends Component {
                 value={searchValue}
                 onChange={this.searchFieldChange}
               />
-              <Button variant='secondary' className='mt-2 mb-2'>
+              <Button
+                variant='secondary'
+                className='mt-2 mb-2'
+                onClick={() => setSearchValue(searchValue)}
+              >
                 Поиск
               </Button>
             </Form>

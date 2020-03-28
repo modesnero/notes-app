@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import Header from '../header'
 import NotesList from '../notes-list'
+import { Button } from 'react-bootstrap'
 
+// Mock notes data
 const getItem = id => {
   return {
     id,
-    title: 'Название',
-    subTitle: 'Подзаголовок',
+    title: 'Название' + id,
+    subTitle: 'Подзаголовок' + id,
     text: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique
   repudiandae recusandae debitis eaque illum aut totam quos impedit
   suscipit voluptatum error, aspernatur praesentium laborum corporis!
@@ -17,7 +19,6 @@ const getItem = id => {
   Id, laboriosam soluta nemo, necessitatibus et atque aliquam fugiat`
   }
 }
-
 const getData = num => {
   let data = []
   for (let i = 0; i < num; i++) {
@@ -26,12 +27,24 @@ const getData = num => {
   return data
 }
 
+const SearchView = ({ searchValue, setSearchValue }) => {
+  return (
+    <>
+      <h2>Результаты поиска: "{searchValue}"</h2>
+      <Button variant='primary' onClick={() => setSearchValue('')}>
+        Очистить
+      </Button>
+    </>
+  )
+}
+
 export default class NotesPage extends Component {
   constructor () {
     super()
     const notes = getData(3)
     this.state = {
-      notes
+      notes,
+      searchValue: ''
     }
   }
 
@@ -45,13 +58,27 @@ export default class NotesPage extends Component {
     })
   }
 
+  setSearchValue = newValue => this.setState({ searchValue: newValue })
+
   render () {
     const { setToken } = this.props
-    const { notes } = this.state
+    const { notes, searchValue } = this.state
     return (
       <>
-        <Header setToken={setToken} />
-        <NotesList notes={notes} deleteNote={this.deleteNote} />
+        <Header setToken={setToken} setSearchValue={this.setSearchValue} />
+
+        {searchValue ? (
+          <SearchView
+            searchValue={searchValue}
+            setSearchValue={this.setSearchValue}
+          />
+        ) : null}
+
+        <NotesList
+          notes={notes}
+          deleteNote={this.deleteNote}
+          searchValue={searchValue}
+        />
       </>
     )
   }
