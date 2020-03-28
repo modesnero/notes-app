@@ -1,22 +1,27 @@
 import React from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 import NoteCard from '../note-card'
 
 export default function NotesList (props) {
   const { notes, deleteNote } = props
 
-  const filter = (searchValue, title, subTitle, text) => {
-    return (
+  let { searchValue } = props
+  searchValue = searchValue.toLowerCase()
+
+  const filter = (title, subTitle, text) => {
+    console.log(title, searchValue)
+    const filterResult =
       searchValue === '' ||
-      title.indexOf(searchValue) ||
-      subTitle.indexOf(searchValue) ||
-      text.indexOf(searchValue)
-    )
+      title.toLowerCase().includes(searchValue) ||
+      subTitle.toLowerCase().includes(searchValue) ||
+      text.toLowerCase().includes(searchValue)
+    return filterResult
   }
 
   const items = notes.map(note => {
-    const { searchValue, title, subTitle, text, id } = note
-    const filterResult = filter(searchValue, title, subTitle, text)
+    const { title, subTitle, text, id } = note
+    const filterResult = filter(title, subTitle, text)
+    console.log(filterResult)
 
     const item = (
       <NoteCard
@@ -34,11 +39,9 @@ export default function NotesList (props) {
 
   return (
     <>
-      <Container>
-        <Row>
-          <Col>{items}</Col>
-        </Row>
-      </Container>
+      <Row>
+        <Col>{items}</Col>
+      </Row>
     </>
   )
 }

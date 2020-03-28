@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import Header from '../header'
 import NotesList from '../notes-list'
-import { Button } from 'react-bootstrap'
+import SearchView from '../search-view'
+import { Container } from 'react-bootstrap'
 
 // Mock notes data
 const getItem = id => {
@@ -25,17 +26,6 @@ const getData = num => {
     data.push(getItem(i))
   }
   return data
-}
-
-const SearchView = ({ searchValue, setSearchValue }) => {
-  return (
-    <>
-      <h2>Результаты поиска: "{searchValue}"</h2>
-      <Button variant='primary' onClick={() => setSearchValue('')}>
-        Очистить
-      </Button>
-    </>
-  )
 }
 
 export default class NotesPage extends Component {
@@ -67,18 +57,20 @@ export default class NotesPage extends Component {
       <>
         <Header setToken={setToken} setSearchValue={this.setSearchValue} />
 
-        {searchValue ? (
-          <SearchView
-            searchValue={searchValue}
-            setSearchValue={this.setSearchValue}
-          />
-        ) : null}
+        <Container>
+          {searchValue ? (
+            <SearchView
+              searchValue={searchValue}
+              setSearchValue={this.setSearchValue}
+            />
+          ) : null}
 
-        <NotesList
-          notes={notes}
-          deleteNote={this.deleteNote}
-          searchValue={searchValue}
-        />
+          <NotesList
+            notes={notes}
+            deleteNote={this.deleteNote}
+            searchValue={searchValue}
+          />
+        </Container>
       </>
     )
   }

@@ -25,14 +25,17 @@ export default class Header extends Component {
         >
           <Navbar.Brand>Заметки</Navbar.Brand>
           <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+
           <Navbar.Collapse id='responsive-navbar-nav'>
             <Nav className='mr-auto'>
-              <Nav.Link>Мои заметки</Nav.Link>
+              <Nav.Link onClick={() => setSearchValue('')}>Мои заметки</Nav.Link>
               <Nav.Link>Добавить заметку</Nav.Link>
+
               <Nav.Link onClick={() => setToken('')}>
                 Выйти из аккаунта
               </Nav.Link>
             </Nav>
+
             <Form inline>
               <FormControl
                 type='text'
@@ -41,10 +44,14 @@ export default class Header extends Component {
                 value={searchValue}
                 onChange={this.searchFieldChange}
               />
+
               <Button
                 variant='secondary'
                 className='mt-2 mb-2'
-                onClick={() => setSearchValue(searchValue)}
+                onClick={() => {
+                  setSearchValue(searchValue)
+                  this.setState({ searchValue: '' })
+                }}
               >
                 Поиск
               </Button>
