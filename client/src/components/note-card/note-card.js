@@ -2,26 +2,24 @@ import React from 'react'
 import { Card } from 'react-bootstrap'
 
 export default function NoteCard (props) {
+  const { id, title, subTitle, text, deleteNote } = props
   return (
     <>
-      <Card>
+      <Card className='mb-4'>
         <Card.Header>
-          <Card.Title>Card Title</Card.Title>
-          <Card.Subtitle className='mb-2 text-muted'>
-            Card Subtitle
-          </Card.Subtitle>
+          <Card.Title>{title}</Card.Title>
+          <Card.Subtitle className='mb-2 text-muted'>{subTitle}</Card.Subtitle>
         </Card.Header>
+
         <Card.Body>
-          <Card.Text>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </Card.Text>
-          <Card.Link href='#'>Card Link</Card.Link>
-          <Card.Link href='#'>Another Link</Card.Link>
+          <Card.Text>{text}</Card.Text>
         </Card.Body>
+
         <Card.Footer>
-          <Card.Link href='#'>Card Link</Card.Link>
-          <Card.Link href='#'>Another Link</Card.Link>
+          <Card.Link href='#'>Редактировать</Card.Link>
+          <Card.Link onClick={() => deleteNote(id)} href='#'>
+            Удалить
+          </Card.Link>
         </Card.Footer>
       </Card>
     </>

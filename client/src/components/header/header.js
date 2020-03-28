@@ -16,7 +16,13 @@ export default class Header extends Component {
 
     return (
       <>
-        <Navbar collapseOnSelect expand='lg' bg='primary' variant='dark'>
+        <Navbar
+          className='mb-5'
+          collapseOnSelect
+          expand='lg'
+          bg='primary'
+          variant='dark'
+        >
           <Navbar.Brand>Заметки</Navbar.Brand>
           <Navbar.Toggle aria-controls='responsive-navbar-nav' />
           <Navbar.Collapse id='responsive-navbar-nav'>
@@ -41,8 +47,6 @@ export default class Header extends Component {
             </Form>
           </Navbar.Collapse>
         </Navbar>
-
-        <br />
       </>
     )
   }
