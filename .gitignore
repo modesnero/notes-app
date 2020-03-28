@@ -3,7 +3,7 @@ node_modules
 client/node_modules
 
 # Server Config
-config
+config/default.json
 
 # Client build
 client/build
