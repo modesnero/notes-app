@@ -75,10 +75,7 @@ export default class AuthPage extends Component {
         status
       } = await apiService.auth('login', { email, password })
 
-      if (token) {
-        localStorage.token = token
-        this.props.setToken(token)
-      }
+      if (token) this.props.setToken(token)
 
       if (message) {
         const variant = status === 400 || status === 500 ? 'danger' : 'success'

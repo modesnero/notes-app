@@ -12,12 +12,15 @@ export default class App extends Component {
     }
   }
 
-  setToken = token => this.setState({ token })
+  setToken = token => {
+    this.setState({ token })
+    localStorage.token = token
+  }
 
   render () {
     const { token } = this.state
     const authPage = <AuthPage setToken={this.setToken} />
-    const notesPage = <NotesPage token={token} />
+    const notesPage = <NotesPage setToken={this.setToken} token={token} />
 
     return <>{!token ? authPage : notesPage}</>
   }

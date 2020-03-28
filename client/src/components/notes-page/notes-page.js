@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
+import Header from '../header'
+import NoteCard from '../note-card'
 
 export default class NotesPage extends Component {
   render () {
-    const { token } = this.props
+    const { token, setToken } = this.props
     return (
       <>
-        <h1>Notes Page</h1>
-        <p>{token}</p>
+        <Header setToken={setToken} />
       </>
     )
   }
