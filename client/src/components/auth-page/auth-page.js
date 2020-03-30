@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Container, Row, Col, Button, Alert } from 'react-bootstrap'
 import ApiService from '../../api-service'
-import AuthField from '../auth-field'
+import FormInput from '../form-input'
 const apiService = new ApiService()
 
 export default class AuthPage extends Component {
@@ -13,20 +13,19 @@ export default class AuthPage extends Component {
   }
 
   onFieldChange = (event, fieldName) => {
-    const {
-      formValue: { email, pass, confirm }
-    } = this.state
+    const { email, pass, confirm } = this.state.formValue
 
     let formValue
+    const newValue = event.target.value
     switch (fieldName) {
       case 'email':
-        formValue = { email: event.target.value, pass, confirm }
+        formValue = { email: newValue, pass, confirm }
         break
       case 'pass':
-        formValue = { pass: event.target.value, email, confirm }
+        formValue = { pass: newValue, email, confirm }
         break
       case 'confirm':
-        formValue = { confirm: event.target.value, email, pass }
+        formValue = { confirm: newValue, email, pass }
         break
       default:
         console.error('Unexpected field name')
@@ -109,7 +108,7 @@ export default class AuthPage extends Component {
             <Form onSubmit={this.onSubmit}>
               <h1 className='text-center'>{btnTitle.submitBtn}</h1>
 
-              <AuthField
+              <FormInput
                 type='email'
                 field='email'
                 title='Email'
@@ -118,7 +117,7 @@ export default class AuthPage extends Component {
                 onFieldChange={this.onFieldChange}
               />
 
-              <AuthField
+              <FormInput
                 type='password'
                 field='pass'
                 title='Пароль'
@@ -128,7 +127,7 @@ export default class AuthPage extends Component {
               />
 
               {!isLogin ? (
-                <AuthField
+                <FormInput
                   type='password'
                   field='confirm'
                   title='Проверка пароля'

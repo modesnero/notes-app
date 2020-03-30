@@ -24,21 +24,24 @@ const getItem = id => {
 
 const getData = num => {
   let data = []
+  console.log('check')
   for (let i = 0; i < num; i++) {
     data.push(getItem(i))
+    localStorage.lastId = i
+    console.log(i)
   }
   return data
 }
 
 export default class NotesPage extends Component {
-  constructor () {
-    super()
-    const notes = getData(3)
-    this.state = {
-      notes,
-      searchValue: '',
-      page: 'home'
-    }
+  state = {
+    page: localStorage.page ? localStorage.page : 'home',
+    notes: [],
+    searchValue: ''
+  }
+
+  componentDidMount = () => {
+    this.setState({notes: getData(3)})
   }
 
   deleteNote = deleteId => {
@@ -48,9 +51,21 @@ export default class NotesPage extends Component {
     })
   }
 
+  addNote = note => {
+    this.setState(({ notes }) => {
+      console.log('add')
+      const newNotes = notes.slice()
+      newNotes.push(note)
+      return {notes: newNotes}
+    })
+  }
+
   setSearchValue = searchValue => this.setState({ searchValue })
 
-  setPage = page => this.setState({ page })
+  setPage = page => {
+    this.setState({ page })
+    localStorage.page = page
+  }
 
   render () {
     const { setToken } = this.props
@@ -79,7 +94,7 @@ export default class NotesPage extends Component {
             />
           ) : null}
 
-          {page === 'add' ? <AddPage /> : null}
+          {page === 'add' ? <AddPage addNote={this.addNote} /> : null}
         </Container>
       </>
     )

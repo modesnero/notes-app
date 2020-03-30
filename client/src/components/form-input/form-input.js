@@ -1,8 +1,17 @@
 import React from 'react'
 import { Form } from 'react-bootstrap'
 
-export default function AuthField (props) {
-  const { onFieldChange, type, field, title, value, placeholder } = props
+export default function FormInput (props) {
+  const {
+    onFieldChange,
+    type,
+    field,
+    title,
+    value,
+    placeholder,
+    mutedText
+  } = props
+
   return (
     <Form.Group>
       <Form.Label>{title}</Form.Label>
@@ -12,6 +21,10 @@ export default function AuthField (props) {
         value={value}
         onChange={event => onFieldChange(event, field)}
       />
+
+      {mutedText ? (
+        <Form.Text className='text-muted'>{mutedText}</Form.Text>
+      ) : null}
     </Form.Group>
   )
 }
