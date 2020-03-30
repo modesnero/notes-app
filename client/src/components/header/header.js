@@ -16,8 +16,15 @@ export default class Header extends Component {
     setSearchValue('')
   }
 
+  submit = event => {
+    event.preventDefault()
+    const { searchValue } = this.state
+    this.props.setSearchValue(searchValue)
+    this.setState({ searchValue: '' })
+  }
+
   render () {
-    const { setToken, setSearchValue } = this.props
+    const { setToken } = this.props
     const { searchValue } = this.state
 
     return (
@@ -46,7 +53,7 @@ export default class Header extends Component {
               </Nav.Link>
             </Nav>
 
-            <Form inline>
+            <Form inline onSubmit={this.submit}>
               <FormControl
                 type='text'
                 placeholder='Поиск заметок'
@@ -55,14 +62,7 @@ export default class Header extends Component {
                 onChange={this.searchFieldChange}
               />
 
-              <Button
-                variant='secondary'
-                className='mt-2 mb-2'
-                onClick={() => {
-                  setSearchValue(searchValue)
-                  this.setState({ searchValue: '' })
-                }}
-              >
+              <Button variant='secondary' className='mt-2 mb-2' type='submit'>
                 Поиск
               </Button>
             </Form>
