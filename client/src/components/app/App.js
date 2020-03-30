@@ -3,13 +3,8 @@ import AuthPage from '../auth-page'
 import NotesPage from '../notes-page'
 
 export default class App extends Component {
-  constructor () {
-    super()
-    const { token: savedToken } = localStorage
-
-    this.state = {
-      token: savedToken ? savedToken : ''
-    }
+  state = {
+    token: localStorage.token ? localStorage : ''
   }
 
   setToken = token => {
@@ -19,9 +14,14 @@ export default class App extends Component {
 
   render () {
     const { token } = this.state
-    const authPage = <AuthPage setToken={this.setToken} />
-    const notesPage = <NotesPage setToken={this.setToken} token={token} />
-
-    return <>{!token ? authPage : notesPage}</>
+    return (
+      <>
+        {token ? (
+          <NotesPage setToken={this.setToken} token={token} />
+        ) : (
+          <AuthPage setToken={this.setToken} />
+        )}
+      </>
+    )
   }
 }

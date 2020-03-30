@@ -43,15 +43,12 @@ export default class NotesPage extends Component {
 
   deleteNote = deleteId => {
     this.setState(({ notes }) => {
-      const newArr = []
-      notes.forEach(item => {
-        if (item.id !== deleteId) newArr.push(item)
-      })
-      return { notes: newArr }
+      const newNotes = notes.filter(el => (el.id !== deleteId ? el : null))
+      return { notes: newNotes }
     })
   }
 
-  setSearchValue = newValue => this.setState({ searchValue: newValue })
+  setSearchValue = searchValue => this.setState({ searchValue })
 
   setPage = page => this.setState({ page })
 

@@ -60,11 +60,9 @@ export default class AuthPage extends Component {
       } = await apiService.auth('register', { email, password })
 
       const variant = status === 400 || status === 500 ? 'danger' : 'success'
-      this.setState({
-        alert: { isShow: true, variant, message }
-      })
-    } catch (error) {
-      console.error(error)
+      this.setState({ alert: { isShow: true, variant, message } })
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -79,12 +77,10 @@ export default class AuthPage extends Component {
 
       if (message) {
         const variant = status === 400 || status === 500 ? 'danger' : 'success'
-        this.setState({
-          alert: { isShow: true, variant, message }
-        })
+        this.setState({ alert: { isShow: true, variant, message } })
       }
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -105,23 +101,6 @@ export default class AuthPage extends Component {
 
   render () {
     const { isLogin, btnTitle, formValue, alert } = this.state
-
-    const confirmView = (
-      <AuthField
-        type='password'
-        field='confirm'
-        title='Проверка пароля'
-        placeholder='Повторите пароль'
-        value={formValue.confirm}
-        onFieldChange={this.onFieldChange}
-      />
-    )
-
-    const alertView = (
-      <Alert className='mt-5' variant={alert.variant}>
-        {alert.message}
-      </Alert>
-    )
 
     return (
       <Container>
@@ -148,7 +127,16 @@ export default class AuthPage extends Component {
                 onFieldChange={this.onFieldChange}
               />
 
-              {!isLogin ? confirmView : null}
+              {!isLogin ? (
+                <AuthField
+                  type='password'
+                  field='confirm'
+                  title='Проверка пароля'
+                  placeholder='Повторите пароль'
+                  value={formValue.confirm}
+                  onFieldChange={this.onFieldChange}
+                />
+              ) : null}
 
               <Button type='submit' variant='primary' className='mb-3' block>
                 {btnTitle.submitBtn}
@@ -159,7 +147,11 @@ export default class AuthPage extends Component {
               </Button>
             </Form>
 
-            {alert.isShow ? alertView : null}
+            {alert.isShow ? (
+              <Alert className='mt-5' variant={alert.variant}>
+                {alert.message}
+              </Alert>
+            ) : null}
           </Col>
         </Row>
       </Container>
