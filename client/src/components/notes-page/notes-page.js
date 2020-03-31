@@ -12,7 +12,7 @@ const getItem = id => {
   return {
     id,
     title: 'Название' + id,
-    subTitle: 'Подзаголовок' + id,
+    color: 'secondary',
     text: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique
           repudiandae recusandae debitis eaque illum aut totam quos impedit
           suscipit voluptatum error, aspernatur praesentium laborum corporis!
@@ -41,9 +41,11 @@ export default class NotesPage extends Component {
     alertShow: false
   }
 
-  componentDidMount = () => {
-    this.setState({ notes: getData(3) })
-  }
+  componentDidMount = () => this.setState({ notes: getData(3) })
+
+  setSearchValue = searchValue => this.setState({ searchValue })
+
+  setShowAlert = alertShow => this.setState({ alertShow })
 
   deleteNote = deleteId => {
     this.setState(({ notes }) => {
@@ -61,14 +63,10 @@ export default class NotesPage extends Component {
     this.setShowAlert(true)
   }
 
-  setSearchValue = searchValue => this.setState({ searchValue })
-
   setPage = page => {
     this.setState({ page })
     localStorage.page = page
   }
-
-  setShowAlert = alertShow => this.setState({ alertShow })
 
   render () {
     const { setToken } = this.props

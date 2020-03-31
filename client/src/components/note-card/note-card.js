@@ -1,14 +1,13 @@
 import React from 'react'
-import { Card } from 'react-bootstrap'
+import { Card, Button } from 'react-bootstrap'
 
-export default function NoteCard (props) {
-  const { id, title, subTitle, text, deleteNote } = props
+export default function NoteCard ({ id, title, color, text, deleteNote }) {
   return (
     <>
-      <Card className='mb-4'>
+      <Card className='mb-4' bg={color}>
         <Card.Header>
           <Card.Title>{title}</Card.Title>
-          <Card.Subtitle className='mb-2 text-muted'>{subTitle}</Card.Subtitle>
+          <Card.Subtitle className='mb-2 text-muted'>date</Card.Subtitle>
         </Card.Header>
 
         <Card.Body>
@@ -16,10 +15,12 @@ export default function NoteCard (props) {
         </Card.Body>
 
         <Card.Footer>
-          <Card.Link href='#'>Редактировать</Card.Link>
-          <Card.Link onClick={() => deleteNote(id)} href='#'>
+          <Button variant='light' size='sm' className="mr-3">
+            Редактировать
+          </Button>
+          <Button variant='light' size='sm' onClick={() => deleteNote(id)}>
             Удалить
-          </Card.Link>
+          </Button>
         </Card.Footer>
       </Card>
     </>

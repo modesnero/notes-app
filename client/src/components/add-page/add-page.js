@@ -1,50 +1,42 @@
 import React, { Component } from 'react'
 import { Row, Col, Form, Button } from 'react-bootstrap'
 import FormInput from '../form-input'
+import ColorChoose from '../color-choose'
 import FormTextarea from '../form-textarea'
 
 export default class AddPage extends Component {
   state = {
-    formValue: {
-      title: '',
-      subTitle: '',
-      text: ''
-    }
+    id: 0,
+    title: '',
+    text: '',
+    date: null,
+    color: ''
   }
 
   onFieldChange = (event, fieldName) => {
-    const { title, subTitle, text } = this.state.formValue
-
-    let formValue
-    const newValue = event.target.value
-    switch (fieldName) {
-      case 'title':
-        formValue = { title: newValue, subTitle, text }
-        break
-      case 'subTitle':
-        formValue = { subTitle: newValue, title, text }
-        break
-      case 'text':
-        formValue = { text: newValue, title, subTitle }
-        break
-      default:
-        console.error('Unexpected field name')
+    if (fieldName === 'title') {
+      this.setState({ title: event.target.value })
+    } else if (fieldName === 'text') {
+      this.setState({ text: event.target.value })
     }
-
-    this.setState({ formValue })
   }
+
+  colorChange = color => this.setState({ color })
 
   submit = event => {
     event.preventDefault()
-    const { formValue: note } = this.state
     const { addNote, setPage } = this.props
-    note.id = Number(localStorage.lastId) + 1
+
+    this.setState({ date: new Date(), id: Number(localStorage.lastId) + 1 })
+    const { id, title, text, date, color } = this.state
+    const note = { id, title, text, date, color }
+
     addNote(note)
     setPage('home')
   }
 
   render () {
-    const { title, subTitle, text } = this.state.formValue
+    const { title, text, color } = this.state
 
     return (
       <>
@@ -59,15 +51,6 @@ export default class AddPage extends Component {
                 value={title}
                 onFieldChange={this.onFieldChange}
               />
-              <FormInput
-                type='text'
-                field='subTitle'
-                title='Подзаголовок'
-                placeholder='Введите подзаголовок'
-                value={subTitle}
-                onFieldChange={this.onFieldChange}
-                mutedText='* Необязательное поле'
-              />
               <FormTextarea
                 field='text'
                 rows='5'
@@ -76,6 +59,8 @@ export default class AddPage extends Component {
                 value={text}
                 onFieldChange={this.onFieldChange}
               />
+
+              <ColorChoose colorChange={this.colorChange} active={color} />
 
               <Button type='submit' variant='primary' block>
                 Добавить заметку
