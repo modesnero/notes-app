@@ -13,9 +13,7 @@ export default class AddPage extends Component {
   }
 
   onFieldChange = (event, fieldName) => {
-    const {
-      formValue: { title, subTitle, text }
-    } = this.state
+    const { title, subTitle, text } = this.state.formValue
 
     let formValue
     const newValue = event.target.value
@@ -38,15 +36,16 @@ export default class AddPage extends Component {
 
   submit = event => {
     event.preventDefault()
-    const { addNote } = this.props
     const { formValue: note } = this.state
-    const id = Number(localStorage.lastId) + 1
-    note.id = id
+    const { addNote, setPage } = this.props
+    note.id = Number(localStorage.lastId) + 1
     addNote(note)
+    setPage('home')
   }
 
   render () {
     const { title, subTitle, text } = this.state.formValue
+
     return (
       <>
         <Row>
@@ -77,13 +76,6 @@ export default class AddPage extends Component {
                 value={text}
                 onFieldChange={this.onFieldChange}
               />
-              
-              {/* <Button variant='primary'>Primary</Button>{' '}
-              <Button variant='secondary'>Secondary</Button>{' '}
-              <Button variant='success'>Success</Button>{' '}
-              <Button variant='warning'>Warning</Button>{' '}
-              <Button variant='danger'>Danger</Button>{' '}
-              <Button variant='info'>Info</Button>{' '} */}
 
               <Button type='submit' variant='primary' block>
                 Добавить заметку

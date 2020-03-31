@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Form, Container, Row, Col, Button, Alert } from 'react-bootstrap'
+import { Form, Container, Row, Col, Button } from 'react-bootstrap'
 import ApiService from '../../api-service'
 import FormInput from '../form-input'
+import Alert from '../alert'
 const apiService = new ApiService()
 
 export default class AuthPage extends Component {
@@ -98,6 +99,13 @@ export default class AuthPage extends Component {
     isLogin ? this.login(email, pass) : this.register(email, pass, confirm)
   }
 
+  setShowAlert = isShow => {
+    this.setState(({ alert }) => {
+      const { variant, message } = alert
+      return { alert: { variant, message, isShow } }
+    })
+  }
+
   render () {
     const { isLogin, btnTitle, formValue, alert } = this.state
 
@@ -147,9 +155,12 @@ export default class AuthPage extends Component {
             </Form>
 
             {alert.isShow ? (
-              <Alert className='mt-5' variant={alert.variant}>
-                {alert.message}
-              </Alert>
+              <Alert
+                setShowAlert={this.setShowAlert}
+                variant={alert.variant}
+                message={alert.message}
+                timeout={5000}
+              />
             ) : null}
           </Col>
         </Row>

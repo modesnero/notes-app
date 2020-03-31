@@ -41,7 +41,7 @@ export default class NotesPage extends Component {
   }
 
   componentDidMount = () => {
-    this.setState({notes: getData(3)})
+    this.setState({ notes: getData(3) })
   }
 
   deleteNote = deleteId => {
@@ -56,7 +56,7 @@ export default class NotesPage extends Component {
       console.log('add')
       const newNotes = notes.slice()
       newNotes.push(note)
-      return {notes: newNotes}
+      return { notes: newNotes }
     })
   }
 
@@ -94,7 +94,9 @@ export default class NotesPage extends Component {
             />
           ) : null}
 
-          {page === 'add' ? <AddPage addNote={this.addNote} /> : null}
+          {page === 'add' ? (
+            <AddPage addNote={this.addNote} setPage={this.setPage} />
+          ) : null}
         </Container>
       </>
     )
