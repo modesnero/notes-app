@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+
 import AuthPage from '../auth-page'
 import NotesPage from '../notes-page'
 

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Form, Container, Row, Col, Button } from 'react-bootstrap'
+
 import ApiService from '../../api-service'
 import FormInput from '../form-input'
 import Alert from '../alert'
-const apiService = new ApiService()
 
 export default class AuthPage extends Component {
   state = {
@@ -12,6 +12,8 @@ export default class AuthPage extends Component {
     btnTitle: { submitBtn: 'Авторизация', toggleBtn: 'Регистрация' },
     alert: { variant: '', message: '', isShow: false }
   }
+
+  apiService = new ApiService()
 
   onFieldChange = (event, fieldName) => {
     const { email, pass, confirm } = this.state.formValue
@@ -58,7 +60,7 @@ export default class AuthPage extends Component {
       const {
         result: { message },
         status
-      } = await apiService.auth('register', { email, password })
+      } = await this.apiService.auth('register', { email, password })
 
       const variant = status === 400 || status === 500 ? 'danger' : 'success'
       this.setState({ alert: { isShow: true, variant, message } })
@@ -72,7 +74,7 @@ export default class AuthPage extends Component {
       const {
         result: { token, message },
         status
-      } = await apiService.auth('login', { email, password })
+      } = await this.apiService.auth('login', { email, password })
 
       if (token) this.props.setToken(token)
 

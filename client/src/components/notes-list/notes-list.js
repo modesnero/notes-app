@@ -1,5 +1,6 @@
 import React from 'react'
 import { Row, Col } from 'react-bootstrap'
+
 import NoteCard from '../note-card'
 
 export default function NotesList ({ notes, deleteNote, searchValue }) {
@@ -13,13 +14,14 @@ export default function NotesList ({ notes, deleteNote, searchValue }) {
   }
 
   const items = notes.map(note => {
-    const { title, color, text, id } = note
+    const { title, color, text, id, date } = note
 
     const item = (
       <NoteCard
         deleteNote={deleteNote}
         title={title}
         color={color}
+        date={date}
         text={text}
         key={id}
         id={id}

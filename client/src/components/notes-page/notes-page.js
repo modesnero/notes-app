@@ -13,6 +13,7 @@ const getItem = id => {
     id,
     title: 'Название' + id,
     color: 'secondary',
+    date: new Date(),
     text: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique
           repudiandae recusandae debitis eaque illum aut totam quos impedit
           suscipit voluptatum error, aspernatur praesentium laborum corporis!
