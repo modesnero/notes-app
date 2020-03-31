@@ -7,10 +7,8 @@ import FormTextarea from '../form-textarea'
 
 export default class AddPage extends Component {
   state = {
-    id: 0,
     title: '',
     text: '',
-    date: null,
     color: ''
   }
 
@@ -27,10 +25,15 @@ export default class AddPage extends Component {
   submit = event => {
     event.preventDefault()
     const { addNote, setPage } = this.props
-
-    this.setState({ date: new Date(), id: Number(localStorage.lastId) + 1 })
-    const { id, title, text, date, color } = this.state
-    const note = { id, title, text, date, color }
+    const { title, text, color } = this.state
+    
+    const note = {
+      id: Number(localStorage.lastId) + 1,
+      date: new Date(),
+      title,
+      text,
+      color
+    }
 
     addNote(note)
     setPage('home')
