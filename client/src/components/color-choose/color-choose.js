@@ -10,9 +10,9 @@ export default function ColorChoose ({ colorChange, active }) {
     'danger',
     'info'
   ]
-  const list = variants.map(variant => {
+  const list = variants.map((variant, index) => {
     return (
-      <Button variant={variant} onClick={() => colorChange(variant)}>
+      <Button key={index} variant={variant} onClick={() => colorChange(variant)}>
         {variant === active ? 'Выбран' : 'Выбрать'}
       </Button>
     )
