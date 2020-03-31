@@ -40,6 +40,7 @@ export default class AuthPage extends Component {
       const { toggleBtn, submitBtn } = btnTitle
       return {
         btnTitle: { submitBtn: toggleBtn, toggleBtn: submitBtn },
+        alert: { variant: '', message: '', isShow: false },
         isLogin: !isLogin
       }
     })
@@ -159,7 +160,6 @@ export default class AuthPage extends Component {
                 setShowAlert={this.setShowAlert}
                 variant={alert.variant}
                 message={alert.message}
-                timeout={5000}
               />
             ) : null}
           </Col>

@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
+import { Container } from 'react-bootstrap'
+
 import Header from '../header'
 import NotesList from '../notes-list'
 import SearchView from '../search-view'
 import AddPage from '../add-page'
-import { Container } from 'react-bootstrap'
+import Alert from '../alert'
 
 // Mock notes data
 const getItem = id => {
@@ -12,23 +14,21 @@ const getItem = id => {
     title: 'Название' + id,
     subTitle: 'Подзаголовок' + id,
     text: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique
-  repudiandae recusandae debitis eaque illum aut totam quos impedit
-  suscipit voluptatum error, aspernatur praesentium laborum corporis!
-  Quis minus nobis aut aliquid accusamus ex eum ratione. Unde non
-  obcaecati deleniti officia. Soluta animi minima adipisci tempora vel
-  corrupti, itaque obcaecati aperiam eaque modi dolore explicabo at,
-  hic quaerat eligendi aliquam amet architecto maxime ullam quas sit?
-  Id, laboriosam soluta nemo, necessitatibus et atque aliquam fugiat`
+          repudiandae recusandae debitis eaque illum aut totam quos impedit
+          suscipit voluptatum error, aspernatur praesentium laborum corporis!
+          Quis minus nobis aut aliquid accusamus ex eum ratione. Unde non
+          obcaecati deleniti officia. Soluta animi minima adipisci tempora vel
+          corrupti, itaque obcaecati aperiam eaque modi dolore explicabo at,
+          hic quaerat eligendi aliquam amet architecto maxime ullam quas sit?
+          Id, laboriosam soluta nemo, necessitatibus et atque aliquam fugiat`
   }
 }
 
 const getData = num => {
   let data = []
-  console.log('check')
   for (let i = 0; i < num; i++) {
     data.push(getItem(i))
     localStorage.lastId = i
-    console.log(i)
   }
   return data
 }
@@ -37,7 +37,8 @@ export default class NotesPage extends Component {
   state = {
     page: localStorage.page ? localStorage.page : 'home',
     notes: [],
-    searchValue: ''
+    searchValue: '',
+    alertShow: false
   }
 
   componentDidMount = () => {
@@ -53,11 +54,11 @@ export default class NotesPage extends Component {
 
   addNote = note => {
     this.setState(({ notes }) => {
-      console.log('add')
       const newNotes = notes.slice()
       newNotes.push(note)
       return { notes: newNotes }
     })
+    this.setShowAlert(true)
   }
 
   setSearchValue = searchValue => this.setState({ searchValue })
@@ -67,9 +68,11 @@ export default class NotesPage extends Component {
     localStorage.page = page
   }
 
+  setShowAlert = alertShow => this.setState({ alertShow })
+
   render () {
     const { setToken } = this.props
-    const { notes, page, searchValue } = this.state
+    const { notes, page, searchValue, alertShow } = this.state
     return (
       <>
         <Header
@@ -83,6 +86,15 @@ export default class NotesPage extends Component {
             <SearchView
               searchValue={searchValue}
               setSearchValue={this.setSearchValue}
+            />
+          ) : null}
+
+          {alertShow ? (
+            <Alert
+              message='Заметка успешно добавлена'
+              variant={'success'}
+              timeout={5000}
+              setShowAlert={this.setShowAlert}
             />
           ) : null}
 
