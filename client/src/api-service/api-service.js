@@ -1,4 +1,10 @@
 export default class ApiService {
+  _getHeaders = (token, isBody) => {
+    return isBody
+      ? { 'Content-Type': 'application/json;charset=utf-8', auth: token }
+      : { auth: token }
+  }
+
   auth = async (type, userData) => {
     const response = await fetch(`/api/auth/${type}`, {
       method: 'POST',
@@ -10,17 +16,14 @@ export default class ApiService {
 
   getNote = async (token, id) => {
     const url = id ? `/api/notes/id=${id}` : '/api/notes/'
-    const response = await fetch(url, { headers: { auth: token } })
+    const response = await fetch(url, { headers: this._getHeaders(token) })
     return { result: await response.json(), status: await response.status }
   }
 
   postNote = async (token, note) => {
     const response = await fetch('/api/notes/', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        auth: token
-      },
+      headers: this._getHeaders(token, true),
       body: JSON.stringify(note)
     })
     return { result: await response.json(), status: await response.status }
@@ -29,7 +32,7 @@ export default class ApiService {
   deleteNote = async (token, id) => {
     const response = await fetch(`/api/notes/${id}`, {
       method: 'DELETE',
-      headers: { auth: token }
+      headers: this._getHeaders(token)
     })
     return { result: await response.json(), status: await response.status }
   }
@@ -37,10 +40,7 @@ export default class ApiService {
   updateNote = async (token, id, note) => {
     const response = await fetch(`/api/notes/${id}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        auth: token
-      },
+      headers: this._getHeaders(token, true),
       body: JSON.stringify(note)
     })
     return { result: await response.json(), status: await response.status }
