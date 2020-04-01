@@ -1,87 +1,100 @@
 const { Router } = require('express')
-const { check, validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken')
 const config = require('config')
 const Note = require('../models/Note')
-const notesRouter = Router()
+const router = Router()
 
-notesRouter.post(
-  '/',
-  [
-    check('title', 'Incorrect title').isLength({ min: 4, max: 120 }),
-    check('text', 'Incorrect text').isLength({ min: 4, max: 600 })
-  ],
-  async (req, res) => {
-    try {
-      const errors = validationResult(req)
-      if (errors.isEmpty) {
-        return res.status(400).json({
-          errors: errors.array(),
-          message: 'Incorrect note data'
-        })
-      }
-
-      const { token, note } = req.body
-      const email = await jwt.verify(token, config.get('jwtSecret'))
-      const newNote = new Note({ email, note })
-
-      await newNote.save()
-      res.status(201).json({ message: 'Note has been created' })
-    } catch (error) {
-      res.status(500).json({ message: 'Server Error' })
-    }
-  }
-)
-
-notesRouter.get('/', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const { token, id } = req.query
-    const email = await jwt.verify(token, config.get('jwtSecret'))
+    // Parse request
+    const { auth: token } = req.headers
+    const { note } = req.body
 
-    const result = await Note.find({ email, _id: id })
+    // Check auth
+    if (!token) return res.status(401).json({ message: 'Ошибка авторизации' })
+    const email = jwt.verify(token, config.get('jwtSecret'))
+
+    // Create note object
+    const newNote = new Note({ email, note })
+
+    // Save note in DB
+    await newNote.save()
+    res.status(201).json({ message: 'Заметка была успешно создана' })
+  } catch (error) {
+    res.status(500).json({ message: 'Ошибка сервера' })
+  }
+})
+
+router.get('/', async (req, res) => {
+  try {
+    // Parse request
+    const { auth: token } = req.headers
+
+    // Check auth
+    if (!token) return res.status(401).json({ message: 'Ошибка авторизации' })
+    const email = jwt.verify(token, config.get('jwtSecret'))
+
+    // Find & send notes
+    const result = await Note.find({ email })
     res.json(result)
   } catch (error) {
-    res.status(500).json({ message: 'Server Error' })
+    res.status(500).json({ message: 'Ошибка сервера' })
   }
 })
 
-notesRouter.delete('/', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const { token, id } = req.query
-    const email = await jwt.verify(token, config.get('jwtSecret'))
+    // Parse request
+    const { auth: token } = req.headers
+    const { id } = req.params
 
-    await Note.findOneAndDelete({ email, _id: id })
-    res.json({ message: 'Note has been deleted' })
+    // Check auth
+    if (!token) return res.status(401).json({ message: 'Ошибка авторизации' })
+    const email = jwt.verify(token, config.get('jwtSecret'))
+
+    // Find & send note
+    const result = await Note.findOne({ email, _id: id })
+    res.json(result)
   } catch (error) {
-    res.status(500).json({ message: 'Server Error' })
+    res.status(500).json({ message: 'Ошибка сервера' })
   }
 })
 
-notesRouter.put(
-  '/',
-  [
-    check('title', 'Incorrect title').isLength({ min: 4, max: 120 }),
-    check('text', 'Incorrect text').isLength({ min: 4, max: 600 })
-  ],
-  async (req, res) => {
-    try {
-      const errors = validationResult(req)
-      if (errors.isEmpty) {
-        return res.status(400).json({
-          errors: errors.array(),
-          message: 'Incorrect note data'
-        })
-      }
+router.delete('/', async (req, res) => {
+  try {
+    // Parse request
+    const { auth: token } = req.headers
+    const { id } = req.params
 
-      const { token, id, note } = req.body
-      const email = await jwt.verify(token, config.get('jwtSecret'))
+    // Check auth
+    if (!token) return res.status(401).json({ message: 'Ошибка авторизации' })
+    const email = jwt.verify(token, config.get('jwtSecret'))
 
-      await Note.findOneAndUpdate({ email, _id: id }, { $set: { note } })
-      res.json({ message: 'Note has been updated' })
-    } catch (error) {
-      res.status(500).json({ message: 'Server Error' })
-    }
+    // Delete note
+    await Note.findOneAndDelete({ email, _id: id })
+    res.json({ message: 'Заметка была успешно удалена' })
+  } catch (error) {
+    res.status(500).json({ message: 'Ошибка сервера' })
   }
-)
+})
 
-module.exports = notesRouter
+router.put('/:id', async (req, res) => {
+  try {
+    // Parse request
+    const { auth: token } = req.headers
+    const { note } = req.body
+    const { id } = req.params
+
+    // Check auth
+    if (!token) return res.status(401).json({ message: 'Ошибка авторизации' })
+    const email = jwt.verify(token, config.get('jwtSecret'))
+
+    // Update note
+    await Note.findOneAndUpdate({ email, _id: id }, { $set: { note } })
+    res.json({ message: 'Заметка была успешно обновлена' })
+  } catch (error) {
+    res.status(500).json({ message: 'Ошибка сервера' })
+  }
+})
+
+module.exports = router

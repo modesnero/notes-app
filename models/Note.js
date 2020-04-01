@@ -5,7 +5,7 @@ const noteSchema = new Schema({
   note: {
     title: { type: String, required: true },
     text: { type: String, required: true },
-    important: { type: 'Number', require: true },
+    color: { type: 'String', require: true },
     date: { type: Date, required: true }
   }
 })

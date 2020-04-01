@@ -5,11 +5,7 @@ const path = require('path')
 
 const PORT = config.get('port') || 5000
 const MONGO_URL = config.get('mongoUrl')
-const MONGO_OPTIONS = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true
-}
+const MONGO_OPTIONS = config.get('mongoOptions')
 
 const app = express()
 
