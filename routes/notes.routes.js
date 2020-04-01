@@ -2,6 +2,7 @@ const { Router } = require('express')
 const jwt = require('jsonwebtoken')
 const config = require('config')
 const Note = require('../models/Note')
+
 const router = Router()
 
 router.post('/', async (req, res) => {
