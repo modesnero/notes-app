@@ -14,7 +14,7 @@ const app = express()
 
 app.use(express.json())
 app.use('/api/auth', require('./routes/auth.routes'))
-app.use('/api/note', require('./routes/notes.routes'))
+app.use('/api/notes', require('./routes/notes.routes'))
 
 // Send static files on Prod
 if (process.env.NODE_ENV === 'production') {
@@ -26,8 +26,8 @@ async function start () {
   try {
     await mongoose.connect(MONGO_URL, MONGO_OPTIONS)
     app.listen(PORT, () => console.log(`App has been started on port: ${PORT}`))
-  } catch (e) {
-    console.error('Server Error', e.message)
+  } catch (err) {
+    console.error('Server Error', err.message)
     process.exit(1)
   }
 }
