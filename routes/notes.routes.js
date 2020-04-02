@@ -61,7 +61,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.delete('/', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     // Parse request
     const { auth: token } = req.headers

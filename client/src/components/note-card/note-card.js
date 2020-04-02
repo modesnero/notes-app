@@ -7,7 +7,9 @@ import 'moment/locale/ru'
 export default function NoteCard (props) {
   const { id, title, color, text, deleteNote, date } = props
 
-  const dateStr = moment(date).locale('ru').format('LLLL')
+  const dateStr = moment(date)
+    .locale('ru')
+    .format('LLLL')
 
   return (
     <>

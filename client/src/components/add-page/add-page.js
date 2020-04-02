@@ -34,8 +34,8 @@ export default class AddPage extends Component {
     const note = { title, text, date: new Date(), color }
 
     try {
-      await this.apiService.postNote(token, note)
       setPage('home')
+      await this.apiService.postNote(token, note)
       loadNotes()
     } catch (err) {
       console.error(err)

@@ -18,6 +18,12 @@ export default class NotesPage extends Component {
 
   apiService = new ApiService()
 
+  componentDidMount = async () => this.loadNotes()
+
+  setSearchValue = searchValue => this.setState({ searchValue })
+
+  setShowAlert = alertShow => this.setState({ alertShow })
+
   loadNotes = async () => {
     try {
       const { token } = this.props
@@ -28,17 +34,14 @@ export default class NotesPage extends Component {
     }
   }
 
-  componentDidMount = async () => this.loadNotes()
-
-  setSearchValue = searchValue => this.setState({ searchValue })
-
-  setShowAlert = alertShow => this.setState({ alertShow })
-
-  deleteNote = deleteId => {
-    this.setState(({ notes }) => {
-      const newNotes = notes.filter(el => (el.id !== deleteId ? el : null))
-      return { notes: newNotes }
-    })
+  deleteNote = async deleteId => {
+    try {
+      const { token } = this.props
+      await this.apiService.deleteNote(token, deleteId)
+      this.loadNotes()
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   setPage = page => {
