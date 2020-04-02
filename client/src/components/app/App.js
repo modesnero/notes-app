@@ -5,7 +5,7 @@ import NotesPage from '../notes-page'
 
 export default class App extends Component {
   state = {
-    token: localStorage.token ? localStorage : ''
+    token: localStorage.token ? localStorage.token : ''
   }
 
   setToken = token => {
@@ -15,6 +15,7 @@ export default class App extends Component {
 
   render () {
     const { token } = this.state
+
     return (
       <>
         {token ? (

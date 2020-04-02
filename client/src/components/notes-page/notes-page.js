@@ -1,38 +1,12 @@
 import React, { Component } from 'react'
 import { Container } from 'react-bootstrap'
 
+import ApiService from '../../services/api-service'
 import Header from '../header'
 import NotesList from '../notes-list'
 import SearchView from '../search-view'
 import AddPage from '../add-page'
 import Alert from '../alert'
-
-// Mock notes data
-const getItem = id => {
-  return {
-    id,
-    title: 'Название' + id,
-    color: 'secondary',
-    date: new Date(),
-    text: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique
-          repudiandae recusandae debitis eaque illum aut totam quos impedit
-          suscipit voluptatum error, aspernatur praesentium laborum corporis!
-          Quis minus nobis aut aliquid accusamus ex eum ratione. Unde non
-          obcaecati deleniti officia. Soluta animi minima adipisci tempora vel
-          corrupti, itaque obcaecati aperiam eaque modi dolore explicabo at,
-          hic quaerat eligendi aliquam amet architecto maxime ullam quas sit?
-          Id, laboriosam soluta nemo, necessitatibus et atque aliquam fugiat`
-  }
-}
-
-const getData = num => {
-  let data = []
-  for (let i = 0; i < num; i++) {
-    data.push(getItem(i))
-    localStorage.lastId = i
-  }
-  return data
-}
 
 export default class NotesPage extends Component {
   state = {
@@ -42,7 +16,19 @@ export default class NotesPage extends Component {
     alertShow: false
   }
 
-  componentDidMount = () => this.setState({ notes: getData(3) })
+  apiService = new ApiService()
+
+  loadNotes = async () => {
+    try {
+      const { token } = this.props
+      const { result: notes } = await this.apiService.getNote(token)
+      this.setState({ notes })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  componentDidMount = async () => this.loadNotes()
 
   setSearchValue = searchValue => this.setState({ searchValue })
 
@@ -55,22 +41,13 @@ export default class NotesPage extends Component {
     })
   }
 
-  addNote = note => {
-    this.setState(({ notes }) => {
-      const newNotes = notes.slice()
-      newNotes.push(note)
-      return { notes: newNotes }
-    })
-    this.setShowAlert(true)
-  }
-
   setPage = page => {
     this.setState({ page })
     localStorage.page = page
   }
 
   render () {
-    const { setToken } = this.props
+    const { setToken, token } = this.props
     const { notes, page, searchValue, alertShow } = this.state
     return (
       <>
@@ -106,7 +83,11 @@ export default class NotesPage extends Component {
           ) : null}
 
           {page === 'add' ? (
-            <AddPage addNote={this.addNote} setPage={this.setPage} />
+            <AddPage
+              loadNotes={this.loadNotes}
+              setPage={this.setPage}
+              token={token}
+            />
           ) : null}
         </Container>
       </>

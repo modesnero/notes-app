@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Row, Col, Form, Button } from 'react-bootstrap'
 
+import ApiService from '../../services/api-service'
 import FormInput from '../form-input'
 import ColorChoose from '../color-choose'
 import FormTextarea from '../form-textarea'
@@ -12,6 +13,8 @@ export default class AddPage extends Component {
     color: ''
   }
 
+  apiService = new ApiService()
+
   onFieldChange = (event, fieldName) => {
     if (fieldName === 'title') {
       this.setState({ title: event.target.value })
@@ -22,21 +25,21 @@ export default class AddPage extends Component {
 
   colorChange = color => this.setState({ color })
 
-  submit = event => {
+  submit = async event => {
     event.preventDefault()
-    const { addNote, setPage } = this.props
-    const { title, text, color } = this.state
-    
-    const note = {
-      id: Number(localStorage.lastId) + 1,
-      date: new Date(),
-      title,
-      text,
-      color
-    }
 
-    addNote(note)
-    setPage('home')
+    const { loadNotes, setPage, token } = this.props
+    const { title, text, color } = this.state
+
+    const note = { title, text, date: new Date(), color }
+
+    try {
+      await this.apiService.postNote(token, note)
+      setPage('home')
+      loadNotes()
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   render () {

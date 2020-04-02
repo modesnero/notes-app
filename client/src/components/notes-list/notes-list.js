@@ -14,7 +14,10 @@ export default function NotesList ({ notes, deleteNote, searchValue }) {
   }
 
   const items = notes.map(note => {
-    const { title, color, text, id, date } = note
+    const {
+      _id: id,
+      note: { title, text, color, date }
+    } = note
 
     const item = (
       <NoteCard

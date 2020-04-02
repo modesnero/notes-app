@@ -24,7 +24,7 @@ export default class ApiService {
     const response = await fetch('/api/notes/', {
       method: 'POST',
       headers: this._getHeaders(token, true),
-      body: JSON.stringify(note)
+      body: JSON.stringify({ note })
     })
     return { result: await response.json(), status: await response.status }
   }
@@ -41,7 +41,7 @@ export default class ApiService {
     const response = await fetch(`/api/notes/${id}`, {
       method: 'POST',
       headers: this._getHeaders(token, true),
-      body: JSON.stringify(note)
+      body: JSON.stringify({ note })
     })
     return { result: await response.json(), status: await response.status }
   }

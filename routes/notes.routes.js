@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
 
     // Check auth
     if (!token) return res.status(401).json({ message: 'Ошибка авторизации' })
-    const email = jwt.verify(token, config.get('jwtSecret'))
+    const { email } = jwt.verify(token, config.get('jwtSecret'))
 
     // Create note object
     const newNote = new Note({ email, note })
@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
 
     // Check auth
     if (!token) return res.status(401).json({ message: 'Ошибка авторизации' })
-    const email = jwt.verify(token, config.get('jwtSecret'))
+    const { email } = jwt.verify(token, config.get('jwtSecret'))
 
     // Find & send notes
     const result = await Note.find({ email })
@@ -51,7 +51,7 @@ router.get('/:id', async (req, res) => {
 
     // Check auth
     if (!token) return res.status(401).json({ message: 'Ошибка авторизации' })
-    const email = jwt.verify(token, config.get('jwtSecret'))
+    const { email } = jwt.verify(token, config.get('jwtSecret'))
 
     // Find & send note
     const result = await Note.findOne({ email, _id: id })
@@ -69,7 +69,7 @@ router.delete('/', async (req, res) => {
 
     // Check auth
     if (!token) return res.status(401).json({ message: 'Ошибка авторизации' })
-    const email = jwt.verify(token, config.get('jwtSecret'))
+    const { email } = jwt.verify(token, config.get('jwtSecret'))
 
     // Delete note
     await Note.findOneAndDelete({ email, _id: id })
@@ -88,7 +88,7 @@ router.put('/:id', async (req, res) => {
 
     // Check auth
     if (!token) return res.status(401).json({ message: 'Ошибка авторизации' })
-    const email = jwt.verify(token, config.get('jwtSecret'))
+    const { email } = jwt.verify(token, config.get('jwtSecret'))
 
     // Update note
     await Note.findOneAndUpdate({ email, _id: id }, { $set: { note } })

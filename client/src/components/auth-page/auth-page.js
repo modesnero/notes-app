@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Container, Row, Col, Button } from 'react-bootstrap'
 
-import ApiService from '../../api-service'
+import ApiService from '../../services/api-service'
 import FormInput from '../form-input'
 import Alert from '../alert'
 
