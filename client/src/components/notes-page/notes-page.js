@@ -5,7 +5,7 @@ import ApiService from '../../services/api-service'
 import Header from '../header'
 import NotesList from '../notes-list'
 import SearchView from '../search-view'
-import AddPage from '../add-page'
+import AddPage from '../fill-note-page'
 import Alert from '../alert'
 
 export default class NotesPage extends Component {
@@ -85,8 +85,9 @@ export default class NotesPage extends Component {
             />
           ) : null}
 
-          {page === 'add' ? (
+          {page === 'fill' ? (
             <AddPage
+              addNoteLocal={this.addNoteLocal}
               loadNotes={this.loadNotes}
               setPage={this.setPage}
               token={token}
