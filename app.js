@@ -5,7 +5,11 @@ const path = require('path')
 
 const PORT = config.get('port') || 5000
 const MONGO_URL = config.get('mongoUrl')
-const MONGO_OPTIONS = config.get('mongoOptions')
+const MONGO_OPTIONS = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true
+}
 
 const PATH_CLIENT_STATIC = path.join(__dirname, 'client', 'build')
 const PATH_INDEX_PAGE = path.resolve(__dirname, 'client', 'build', 'index.html')
