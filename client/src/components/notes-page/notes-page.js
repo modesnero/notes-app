@@ -5,7 +5,7 @@ import ApiService from '../../services/api-service'
 import Header from '../header'
 import NotesList from '../notes-list'
 import SearchView from '../search-view'
-import AddPage from '../fill-note-page'
+import AddPage from '../add-page'
 import Alert from '../alert'
 
 export default class NotesPage extends Component {

@@ -6,11 +6,10 @@ import FormInput from '../form-input'
 import ColorChoose from '../color-choose'
 import FormTextarea from '../form-textarea'
 
-export default class FillNotePage extends Component {
-  state = {
-    title: '',
-    text: '',
-    color: ''
+export default class EditPage extends Component {
+  constructor ({ title, text, color }) {
+    super()
+    this.state = { title, text, color }
   }
 
   apiService = new ApiService()
@@ -27,23 +26,9 @@ export default class FillNotePage extends Component {
 
   submit = async event => {
     event.preventDefault()
-
-    const { loadNotes, setPage, token } = this.props
-    const { title, text, color } = this.state
-    const note = { title, text, date: new Date(), color }
-
-    try {
-      setPage('home')
-      await this.apiService.postNote(token, note)
-      loadNotes()
-    } catch (err) {
-      console.error(err)
-    }
   }
 
   render () {
-    const { title, text, color } = this.state
-
     return (
       <>
         <Row>
