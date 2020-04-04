@@ -5,7 +5,7 @@ import moment from 'moment'
 import 'moment/locale/ru'
 
 export default function NoteCard (props) {
-  const { id, title, color, text, deleteNote, date } = props
+  const { id, title, color, text, deleteNote, editNote, date } = props
 
   const dateStr = moment(date)
     .locale('ru')
@@ -24,7 +24,12 @@ export default function NoteCard (props) {
         </Card.Body>
 
         <Card.Footer>
-          <Button variant='light' size='sm' className='mr-3'>
+          <Button
+            variant='light'
+            size='sm'
+            className='mr-3'
+            onClick={() => editNote(id)}
+          >
             Редактировать
           </Button>
           <Button variant='light' size='sm' onClick={() => deleteNote(id)}>

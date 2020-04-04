@@ -3,7 +3,7 @@ import { Row, Col } from 'react-bootstrap'
 
 import NoteCard from '../note-card'
 
-export default function NotesList ({ notes, deleteNote, searchValue }) {
+export default function NotesList ({ notes, deleteNote, editNote, searchValue }) {
   const filter = (title, text) => {
     searchValue = searchValue.toLowerCase()
     return (
@@ -22,6 +22,7 @@ export default function NotesList ({ notes, deleteNote, searchValue }) {
     const item = (
       <NoteCard
         deleteNote={deleteNote}
+        editNote={editNote}
         title={title}
         color={color}
         date={date}

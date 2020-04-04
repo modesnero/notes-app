@@ -6,12 +6,14 @@ import Header from '../header'
 import NotesList from '../notes-list'
 import SearchView from '../search-view'
 import AddPage from '../add-page'
+import EditPage from '../edit-page'
 import Alert from '../alert'
 
 export default class NotesPage extends Component {
   state = {
-    page: localStorage.page ? localStorage.page : 'home',
     notes: [],
+    page: localStorage.page ? localStorage.page : 'home',
+    editNote: {},
     searchValue: '',
     alertShow: false
   }
@@ -34,6 +36,13 @@ export default class NotesPage extends Component {
     }
   }
 
+  clickEdit = editId => {
+    const { notes } = this.state
+    const editNote = notes.find(item => (item._id === editId ? true : false))
+    this.setState({ editNote })
+    this.setPage('edit')
+  }
+
   deleteNote = async deleteId => {
     try {
       const { token } = this.props
@@ -46,12 +55,11 @@ export default class NotesPage extends Component {
 
   setPage = page => {
     this.setState({ page })
-    localStorage.page = page
   }
 
   render () {
     const { setToken, token } = this.props
-    const { notes, page, searchValue, alertShow } = this.state
+    const { notes, page, searchValue, alertShow, editNote } = this.state
     return (
       <>
         <Header
@@ -81,14 +89,23 @@ export default class NotesPage extends Component {
             <NotesList
               notes={notes}
               deleteNote={this.deleteNote}
+              editNote={this.clickEdit}
               searchValue={searchValue}
             />
           ) : null}
 
-          {page === 'fill' ? (
+          {page === 'add' ? (
             <AddPage
-              addNoteLocal={this.addNoteLocal}
               loadNotes={this.loadNotes}
+              setPage={this.setPage}
+              token={token}
+            />
+          ) : null}
+
+          {page === 'edit' ? (
+            <EditPage
+              loadNotes={this.loadNotes}
+              editNote={editNote}
               setPage={this.setPage}
               token={token}
             />

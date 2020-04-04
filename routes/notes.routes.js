@@ -83,7 +83,9 @@ router.put('/:id', async (req, res) => {
   try {
     // Parse request
     const { auth: token } = req.headers
-    const { note } = req.body
+    const {
+      note: { note }
+    } = req.body
     const { id } = req.params
 
     // Check auth
@@ -91,7 +93,7 @@ router.put('/:id', async (req, res) => {
     const { email } = jwt.verify(token, config.get('jwtSecret'))
 
     // Update note
-    await Note.findOneAndUpdate({ email, _id: id }, { $set: { note } })
+    await Note.updateOne({ email, _id: id }, { note })
     res.json({ message: 'Заметка была успешно обновлена' })
   } catch (error) {
     res.status(500).json({ message: 'Ошибка сервера' })

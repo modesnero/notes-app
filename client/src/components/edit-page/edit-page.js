@@ -7,9 +7,10 @@ import ColorChoose from '../color-choose'
 import FormTextarea from '../form-textarea'
 
 export default class EditPage extends Component {
-  constructor ({ title, text, color }) {
+  constructor ({ editNote }) {
     super()
-    this.state = { title, text, color }
+    const { title, text, date, color } = editNote.note
+    this.state = { title, text, date, color }
   }
 
   apiService = new ApiService()
@@ -26,9 +27,18 @@ export default class EditPage extends Component {
 
   submit = async event => {
     event.preventDefault()
+
+    const { editNote, token, loadNotes, setPage } = this.props
+    const { _id, email } = editNote
+
+    const updatedNote = { _id, email, note: this.state }
+    await this.apiService.updateNote(token, _id, updatedNote)
+    loadNotes()
+    setPage('home')
   }
 
   render () {
+    const { title, text, color } = this.state
     return (
       <>
         <Row>
@@ -54,7 +64,7 @@ export default class EditPage extends Component {
               <ColorChoose colorChange={this.colorChange} active={color} />
 
               <Button type='submit' variant='primary' block>
-                Добавить заметку
+                Сохранить
               </Button>
             </Form>
           </Col>

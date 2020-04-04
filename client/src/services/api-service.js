@@ -39,7 +39,7 @@ export default class ApiService {
 
   updateNote = async (token, id, note) => {
     const response = await fetch(`/api/notes/${id}`, {
-      method: 'POST',
+      method: 'PUT',
       headers: this._getHeaders(token, true),
       body: JSON.stringify({ note })
     })
