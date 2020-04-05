@@ -28,14 +28,15 @@ export default class AddPage extends Component {
   submit = async event => {
     event.preventDefault()
 
-    const { loadNotes, setPage, token } = this.props
+    const { loadNotes, setPage, token, setAlert } = this.props
     const { title, text, color } = this.state
     const note = { title, text, date: new Date(), color }
 
     try {
       setPage('home')
       await this.apiService.postNote(token, note)
-      loadNotes()
+      await loadNotes()
+      setAlert(true, 'Заметка успешно добавлена', 'success')
     } catch (err) {
       console.error(err)
     }

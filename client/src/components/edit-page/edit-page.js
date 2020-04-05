@@ -28,13 +28,14 @@ export default class EditPage extends Component {
   submit = async event => {
     event.preventDefault()
 
-    const { editNote, token, loadNotes, setPage } = this.props
+    const { editNote, token, loadNotes, setPage, setAlert } = this.props
     const { _id, email } = editNote
-
     const updatedNote = { _id, email, note: this.state }
-    await this.apiService.updateNote(token, _id, updatedNote)
-    loadNotes()
+
     setPage('home')
+    await this.apiService.updateNote(token, _id, updatedNote)
+    await loadNotes()
+    setAlert(true, 'Заметка была отредактирована', 'info')
   }
 
   render () {

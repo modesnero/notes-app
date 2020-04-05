@@ -13,23 +13,26 @@ export default class NotesPage extends Component {
   state = {
     notes: [],
     page: localStorage.page ? localStorage.page : 'home',
+    alert: { isShow: false, message: '', color: '' },
     editNote: {},
-    searchValue: '',
-    alertShow: false
+    searchValue: ''
   }
 
   apiService = new ApiService()
 
   componentDidMount = async () => this.loadNotes()
 
+  setPage = page => this.setState({ page })
+
   setSearchValue = searchValue => this.setState({ searchValue })
 
-  setShowAlert = alertShow => this.setState({ alertShow })
+  setAlert = (isShow, message, color) => {
+    this.setState({ alert: { isShow, message, color } })
+  }
 
   loadNotes = async () => {
     try {
-      const { token } = this.props
-      const { result: notes } = await this.apiService.getNote(token)
+      const { result: notes } = await this.apiService.getNote(this.props.token)
       this.setState({ notes })
     } catch (err) {
       console.error(err)
@@ -45,21 +48,17 @@ export default class NotesPage extends Component {
 
   deleteNote = async deleteId => {
     try {
-      const { token } = this.props
-      await this.apiService.deleteNote(token, deleteId)
-      this.loadNotes()
+      await this.apiService.deleteNote(this.props.token, deleteId)
+      await this.loadNotes()
+      this.setAlert(true, 'Заметка была удалена', 'danger')
     } catch (err) {
       console.error(err)
     }
   }
 
-  setPage = page => {
-    this.setState({ page })
-  }
-
   render () {
     const { setToken, token } = this.props
-    const { notes, page, searchValue, alertShow, editNote } = this.state
+    const { notes, page, searchValue, alert, editNote } = this.state
     return (
       <>
         <Header
@@ -76,12 +75,12 @@ export default class NotesPage extends Component {
             />
           ) : null}
 
-          {alertShow ? (
+          {alert.isShow ? (
             <Alert
-              message='Заметка успешно добавлена'
-              variant={'success'}
+              message={alert.message}
+              variant={alert.color}
               timeout={5000}
-              setShowAlert={this.setShowAlert}
+              setAlert={this.setAlert}
             />
           ) : null}
 
@@ -96,18 +95,20 @@ export default class NotesPage extends Component {
 
           {page === 'add' ? (
             <AddPage
-              loadNotes={this.loadNotes}
-              setPage={this.setPage}
               token={token}
+              setPage={this.setPage}
+              loadNotes={this.loadNotes}
+              setAlert={this.setAlert}
             />
           ) : null}
 
           {page === 'edit' ? (
             <EditPage
-              loadNotes={this.loadNotes}
-              editNote={editNote}
-              setPage={this.setPage}
               token={token}
+              setPage={this.setPage}
+              loadNotes={this.loadNotes}
+              setAlert={this.setAlert}
+              editNote={editNote}
             />
           ) : null}
         </Container>
