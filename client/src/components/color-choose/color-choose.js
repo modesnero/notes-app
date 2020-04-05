@@ -1,27 +1,36 @@
 import React from 'react'
-import { ButtonGroup, Button } from 'react-bootstrap'
+import { Row, Col, Button } from 'react-bootstrap'
 
 export default function ColorChoose ({ colorChange, active }) {
   const variants = [
-    'primary',
-    'secondary',
-    'success',
-    'warning',
-    'danger',
-    'info'
+    ['primary', 'Основной'],
+    ['secondary', 'Темный'],
+    ['success', 'Успшено'],
+    ['warning', 'Предупреждение'],
+    ['danger', 'Опасность'],
+    ['info', 'Инфо']
   ]
   const list = variants.map((variant, index) => {
+    console.log(active[0] + ' ' + variant[0])
     return (
-      <Button key={index} variant={variant} onClick={() => colorChange(variant)}>
-        {variant === active ? 'Выбран' : 'Выбрать'}
-      </Button>
+      <Col>
+        <Button
+          block
+          key={index}
+          variant={variant[0]}
+          onClick={() => colorChange(variant[0])}
+          className={variant[0] === active ? null : 'disabled'}
+        >
+          {variant[1]}
+        </Button>
+      </Col>
     )
   })
   return (
     <>
       <label className='mb-2'>Выбор цвета</label>
       <br />
-      <ButtonGroup className='mb-3'>{list}</ButtonGroup>
+      <Row className="mb-3">{list}</Row>
     </>
   )
 }
