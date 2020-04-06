@@ -11,9 +11,8 @@ export default function ColorChoose ({ colorChange, active }) {
     ['info', 'Инфо']
   ]
   const list = variants.map((variant, index) => {
-    console.log(active[0] + ' ' + variant[0])
     return (
-      <Col>
+      <Col xl={2} lg={4} md={4} sm={6} col={12} className='mb-3'>
         <Button
           block
           key={index}
@@ -28,9 +27,8 @@ export default function ColorChoose ({ colorChange, active }) {
   })
   return (
     <>
-      <label className='mb-2'>Выбор цвета</label>
-      <br />
-      <Row className="mb-3">{list}</Row>
+      <label className='mb-2'>Выбор цвета</label> <br />
+      <Row>{list}</Row>
     </>
   )
 }
