@@ -34,8 +34,7 @@ export default class AddPage extends Component {
 
     try {
       setPage('home')
-      await this.apiService.postNote(token, note)
-      await loadNotes()
+      await loadNotes(this.apiService.postNote, token, note)
       setAlert(true, 'Заметка успешно добавлена', 'success')
     } catch (err) {
       console.error(err)

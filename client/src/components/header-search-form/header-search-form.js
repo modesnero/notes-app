@@ -18,7 +18,7 @@ export default class HeaderSearchForm extends Component {
   }
 
   render () {
-    const { searchValue } = this.props
+    const { searchValue } = this.state
     return (
       <Form inline onSubmit={this.submit}>
         <FormControl

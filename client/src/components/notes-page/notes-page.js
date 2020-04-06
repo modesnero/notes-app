@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container } from 'react-bootstrap'
+import { Container, Spinner } from 'react-bootstrap'
 
 import ApiService from '../../services/api-service'
 import Header from '../header'
@@ -16,7 +16,8 @@ export default class NotesPage extends Component {
     alert: { isShow: false, message: '', color: '' },
     alertInterval: null,
     editNote: {},
-    searchValue: ''
+    searchValue: '',
+    loading: false
   }
 
   apiService = new ApiService()
@@ -25,22 +26,33 @@ export default class NotesPage extends Component {
 
   setPage = page => this.setState({ page })
 
-  setSearchValue = searchValue => this.setState({ searchValue })
+  setLoading = loading => this.setState({ loading })
 
-  setAlert = (isShow, message, color) => {
-    const { alert, alertInterval } = this.state
-    if (alert.isShow) clearTimeout(alertInterval)
-
-    this.setState({
-      alert: { isShow, message, color },
-      alertInterval: setTimeout(() => this.setAlert(false, '', ''), 5000)
-    })
+  setSearchValue = searchValue => {
+    if (this.state.notes.length) this.setState({ searchValue })
   }
 
-  loadNotes = async () => {
+  setAlert = (isShow, message, color) => {
+    const { alertInterval } = this.state
+    if (isShow) {
+      clearTimeout(alertInterval)
+      this.setState({
+        alertInterval: setTimeout(() => this.setAlert(false, '', ''), 5000)
+      })
+    }
+
+    this.setState({ alert: { isShow, message, color } })
+  }
+
+  loadNotes = async (action, ...args) => {
     try {
+      this.setLoading(true)
+      if (action) await action(...args)
+
       const { result: notes } = await this.apiService.getNote(this.props.token)
       this.setState({ notes })
+
+      this.setLoading(false)
     } catch (err) {
       console.error(err)
     }
@@ -55,8 +67,11 @@ export default class NotesPage extends Component {
 
   deleteNote = async deleteId => {
     try {
-      await this.apiService.deleteNote(this.props.token, deleteId)
-      await this.loadNotes()
+      await this.loadNotes(
+        this.apiService.deleteNote,
+        this.props.token,
+        deleteId
+      )
       this.setAlert(true, 'Заметка была удалена', 'danger')
     } catch (err) {
       console.error(err)
@@ -65,7 +80,14 @@ export default class NotesPage extends Component {
 
   render () {
     const { setToken, token } = this.props
-    const { notes, page, searchValue, alert, editNote } = this.state
+    const { notes, page, searchValue, alert, editNote, loading } = this.state
+
+    const spinnerView = (
+      <h3>
+        <Spinner animation='border' className='mr-3' /> Загрузка...
+      </h3>
+    )
+
     return (
       <>
         <Header
@@ -75,13 +97,6 @@ export default class NotesPage extends Component {
         />
 
         <Container>
-          {searchValue ? (
-            <SearchView
-              searchValue={searchValue}
-              setSearchValue={this.setSearchValue}
-            />
-          ) : null}
-
           {alert.isShow && page === 'home' ? (
             <Alert
               message={alert.message}
@@ -91,7 +106,14 @@ export default class NotesPage extends Component {
             />
           ) : null}
 
-          {page === 'home' ? (
+          {searchValue ? (
+            <SearchView
+              searchValue={searchValue}
+              setSearchValue={this.setSearchValue}
+            />
+          ) : null}
+
+          {page === 'home' && !loading ? (
             <NotesList
               notes={notes}
               setPage={this.setPage}
@@ -100,6 +122,8 @@ export default class NotesPage extends Component {
               searchValue={searchValue}
             />
           ) : null}
+
+          {page === 'home' && loading ? spinnerView : null}
 
           {page === 'add' ? (
             <AddPage

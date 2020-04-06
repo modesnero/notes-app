@@ -33,8 +33,7 @@ export default class EditPage extends Component {
     const updatedNote = { _id, email, note: this.state }
 
     setPage('home')
-    await this.apiService.updateNote(token, _id, updatedNote)
-    await loadNotes()
+    await loadNotes(this.apiService.updateNote, token, _id, updatedNote)
     setAlert(true, 'Заметка была отредактирована', 'info')
   }
 
