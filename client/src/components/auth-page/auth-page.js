@@ -10,10 +10,23 @@ export default class AuthPage extends Component {
     isLogin: true,
     formValue: { email: '', pass: '', confirm: '' },
     btnTitle: { submitBtn: 'Авторизация', toggleBtn: 'Регистрация' },
-    alert: { variant: '', message: '', isShow: false }
+    alert: { isShow: false, message: '', color: '' },
+    alertInterval: null
   }
 
   apiService = new ApiService()
+
+  setAlert = (isShow, message, color) => {
+    const { alertInterval } = this.state
+    if (isShow) {
+      clearTimeout(alertInterval)
+      this.setState({
+        alertInterval: setTimeout(() => this.setAlert(false, '', ''), 5000)
+      })
+    }
+
+    this.setState({ alert: { isShow, message, color } })
+  }
 
   onFieldChange = (event, fieldName) => {
     const { email, pass, confirm } = this.state.formValue
@@ -50,10 +63,8 @@ export default class AuthPage extends Component {
 
   register = async (email, password, confirm) => {
     if (password !== confirm) {
-      const message = 'Пароли не совпадают, повторите попытку'
-      return this.setState({
-        alert: { isShow: true, variant: 'danger', message }
-      })
+      this.setAlert(true, 'Пароли не совпадают, повторите попытку', 'danger')
+      return
     }
 
     try {
@@ -62,8 +73,8 @@ export default class AuthPage extends Component {
         status
       } = await this.apiService.auth('register', { email, password })
 
-      const variant = status === 400 || status === 500 ? 'danger' : 'success'
-      this.setState({ alert: { isShow: true, variant, message } })
+      const color = status === 400 || status === 500 ? 'danger' : 'success'
+      this.setAlert(true, message, color)
     } catch (err) {
       console.error(err)
     }
@@ -79,8 +90,8 @@ export default class AuthPage extends Component {
       if (token) this.props.setToken(token)
 
       if (message) {
-        const variant = status === 400 || status === 500 ? 'danger' : 'success'
-        this.setState({ alert: { isShow: true, variant, message } })
+        const color = status === 400 || status === 500 ? 'danger' : 'success'
+        this.setAlert(true, message, color)
       }
     } catch (err) {
       console.error(err)
@@ -100,13 +111,6 @@ export default class AuthPage extends Component {
     })
 
     isLogin ? this.login(email, pass) : this.register(email, pass, confirm)
-  }
-
-  setShowAlert = isShow => {
-    this.setState(({ alert }) => {
-      const { variant, message } = alert
-      return { alert: { variant, message, isShow } }
-    })
   }
 
   render () {
@@ -158,11 +162,7 @@ export default class AuthPage extends Component {
             </Form>
 
             {alert.isShow ? (
-              <Alert
-                setShowAlert={this.setShowAlert}
-                variant={alert.variant}
-                message={alert.message}
-              />
+              <Alert variant={alert.color} message={alert.message} />
             ) : null}
           </Col>
         </Row>
