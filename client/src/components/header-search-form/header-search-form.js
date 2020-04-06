@@ -2,9 +2,7 @@ import React, { Component } from 'react'
 import { Form, Button, FormControl } from 'react-bootstrap'
 
 export default class HeaderSearchForm extends Component {
-  state = {
-    searchValue: ''
-  }
+  state = { searchValue: '' }
 
   searchFieldChange = event => {
     this.setState({ searchValue: event.target.value })
@@ -12,10 +10,11 @@ export default class HeaderSearchForm extends Component {
 
   submit = event => {
     event.preventDefault()
-    const { searchValue } = this.state
-    const { setSearchValue } = this.props
-    setSearchValue(searchValue)
+    const { setSearchValue, navClose } = this.props
+
+    setSearchValue(this.state.searchValue)
     this.setState({ searchValue: '' })
+    navClose()
   }
 
   render () {

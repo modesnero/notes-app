@@ -1,10 +1,13 @@
 import React from 'react'
 import { Nav } from 'react-bootstrap'
 
-export default function HeaderNav ({ setPage, setSearchValue, setToken }) {
+export default function HeaderNav (props) {
+  const { setPage, setSearchValue, setToken, navClose } = props
+
   const ckickPage = page => {
     setPage(page)
     setSearchValue('')
+    navClose()
   }
 
   return (

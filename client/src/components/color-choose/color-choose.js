@@ -12,10 +12,9 @@ export default function ColorChoose ({ colorChange, active }) {
   ]
   const list = variants.map((variant, index) => {
     return (
-      <Col xl={2} lg={4} md={4} sm={6} col={12} className='mb-3'>
+      <Col xl={2} lg={4} md={4} sm={6} col={12} className='mb-3' key={index}>
         <Button
           block
-          key={index}
           variant={variant[0]}
           onClick={() => colorChange(variant[0])}
           className={variant[0] === active ? null : 'disabled'}
