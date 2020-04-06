@@ -75,11 +75,10 @@ export default class NotesPage extends Component {
             />
           ) : null}
 
-          {alert.isShow ? (
+          {alert.isShow && page === 'home' ? (
             <Alert
               message={alert.message}
               variant={alert.color}
-              timeout={5000}
               setAlert={this.setAlert}
             />
           ) : null}
@@ -87,6 +86,7 @@ export default class NotesPage extends Component {
           {page === 'home' ? (
             <NotesList
               notes={notes}
+              setPage={this.setPage}
               deleteNote={this.deleteNote}
               editNote={this.clickEdit}
               searchValue={searchValue}

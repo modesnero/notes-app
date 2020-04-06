@@ -1,9 +1,12 @@
 import React from 'react'
-import { Row, Col } from 'react-bootstrap'
+import { Row, Col, Button } from 'react-bootstrap'
 
 import NoteCard from '../note-card'
 
-export default function NotesList ({ notes, deleteNote, editNote, searchValue }) {
+export default function NotesList (props) {
+  const { notes, deleteNote, editNote, setPage } = props
+  let { searchValue } = props
+
   const filter = (title, text) => {
     searchValue = searchValue.toLowerCase()
     return (
@@ -19,7 +22,7 @@ export default function NotesList ({ notes, deleteNote, editNote, searchValue })
       note: { title, text, color, date }
     } = note
 
-    const item = (
+    const itemView = (
       <NoteCard
         deleteNote={deleteNote}
         editNote={editNote}
@@ -32,13 +35,20 @@ export default function NotesList ({ notes, deleteNote, editNote, searchValue })
       />
     )
 
-    return filter(title, text) ? item : null
+    return filter(title, text) ? itemView : null
   })
+
+  const emptyListView = (
+    <>
+      <h3 className='mb-3'>Каталог заметок пуст</h3>
+      <Button onClick={() => setPage('add')}>Добавить заметку</Button>
+    </>
+  )
 
   return (
     <>
       <Row>
-        <Col>{items}</Col>
+        <Col>{items.length ? items : emptyListView}</Col>
       </Row>
     </>
   )

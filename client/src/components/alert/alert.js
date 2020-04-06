@@ -3,8 +3,7 @@ import { Alert as AlertBootstrap } from 'react-bootstrap'
 
 export default class Alert extends Component {
   componentDidMount = () => {
-    const { timeout, setAlert } = this.props
-    setTimeout(() => setAlert(false, '', ''), timeout)
+    setTimeout(() => this.props.setAlert(false, '', ''), 5000)
   }
 
   render () {
