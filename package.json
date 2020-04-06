@@ -15,7 +15,7 @@
     "dev": "concurrently -c \"green.bold,red.bold\" \"npm run server:dev\" \"npm run client:dev\"",
     "server:dev": "nodemon app.js",
     "client:install": "cd client & npm install",
-    "client:dev": "npm run start --prefix client",
+    "client:dev": "cross-env NODE_ENV=development npm run start --prefix client",
     "client:build": "npm run build --prefix client"
   },
   "dependencies": {
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "concurrently": "^5.1.0",
+    "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.20.1",
