@@ -14,6 +14,7 @@ export default class NotesPage extends Component {
     notes: [],
     page: localStorage.page ? localStorage.page : 'home',
     alert: { isShow: false, message: '', color: '' },
+    alertInterval: null,
     editNote: {},
     searchValue: ''
   }
@@ -27,7 +28,13 @@ export default class NotesPage extends Component {
   setSearchValue = searchValue => this.setState({ searchValue })
 
   setAlert = (isShow, message, color) => {
-    this.setState({ alert: { isShow, message, color } })
+    const { alert, alertInterval } = this.state
+    if (alert.isShow) clearTimeout(alertInterval)
+
+    this.setState({
+      alert: { isShow, message, color },
+      alertInterval: setTimeout(() => this.setAlert(false, '', ''), 5000)
+    })
   }
 
   loadNotes = async () => {
@@ -80,6 +87,7 @@ export default class NotesPage extends Component {
               message={alert.message}
               variant={alert.color}
               setAlert={this.setAlert}
+              setAlertInterval={this.setAlertInterval}
             />
           ) : null}
 
